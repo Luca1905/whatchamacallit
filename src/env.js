@@ -34,8 +34,8 @@ export const env = createEnv({
 	 */
 	runtimeEnv: {
 		CONVEX_DEPLOYMENT: process.env.CONVEX_DEPLOYMENT,
-		NEXT_PUBLIC_CONVEX_URL: process.env.NEXT_PUBLIC_CONVEX_URL,	
-    AUTH_SECRET: process.env.AUTH_SECRET,
+		NEXT_PUBLIC_CONVEX_URL: process.env.NEXT_PUBLIC_CONVEX_URL,
+		AUTH_SECRET: process.env.AUTH_SECRET,
 		AUTH_DISCORD_ID: process.env.AUTH_DISCORD_ID,
 		AUTH_DISCORD_SECRET: process.env.AUTH_DISCORD_SECRET,
 		NODE_ENV: process.env.NODE_ENV,
