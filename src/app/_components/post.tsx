@@ -1,11 +1,14 @@
 "use client";
 
 import { api } from "@/../convex/_generated/api";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation } from "convex/react";
+import { type Preloaded, usePreloadedQuery } from "convex/react";
 import { useState } from "react";
 
-export function LatestPost() {
-	const latestPost = useQuery(api.posts.getLatest);
+export function LatestPost(props: {
+	preloadedPost: Preloaded<typeof api.posts.getLatest>;
+}) {
+	const latestPost = usePreloadedQuery(props.preloadedPost);
 
 	const [name, setName] = useState("");
 	const createPost = useMutation(api.posts.create);
