@@ -16,8 +16,8 @@
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@clerk/clerk-react": "^5.31.8",
-		"@clerk/nextjs": "^6.20.2",
+		"@auth/core": "0.37.0",
+		"@convex-dev/auth": "^0.0.87",
 		"@radix-ui/react-slot": "^1.2.3",
 		"@t3-oss/env-nextjs": "^0.12.0",
 		"class-variance-authority": "^0.7.1",
