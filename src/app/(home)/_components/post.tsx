@@ -1,20 +1,32 @@
 "use client";
 
 import { api } from "@/../convex/_generated/api";
-import { useMutation } from "convex/react";
+import { useConvexAuth, useMutation, useQuery } from "convex/react";
 import { type Preloaded, usePreloadedQuery } from "convex/react";
+import { redirect } from "next/navigation";
 import { useState } from "react";
 
 export function LatestPost(props: {
 	preloadedPost: Preloaded<typeof api.posts.getLatest>;
 }) {
 	const latestPost = usePreloadedQuery(props.preloadedPost);
-
 	const [name, setName] = useState("");
 	const createPost = useMutation(api.posts.create);
+	const { isAuthenticated, isLoading } = useConvexAuth();
+
+	const username = useQuery(api.user.getUsername);
+
+	if (isLoading) {
+		return <div>Loading ...</div>;
+	}
+
+	if (!isAuthenticated) {
+		redirect("/sign-in");
+	}
 
 	return (
 		<div className="w-full max-w-xs">
+			<p>Hello {username ?? "User"}</p>{" "}
 			{latestPost ? (
 				<p className="truncate">Your most recent post: {latestPost.name}</p>
 			) : (
