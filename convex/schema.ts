@@ -10,5 +10,5 @@ export default defineSchema({
 	posts: defineTable({
 		name: v.string(),
 	}),
-  ...authTables,
+	...authTables,
 });
