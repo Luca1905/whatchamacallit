@@ -168,3 +168,147 @@
 		}
 	}
 }
+
+body {
+	background: #1b2838 none repeat scroll 0 0;
+	margin: 0;
+	overflow: hidden;
+	height: 100vh;
+	width: 100vw;
+}
+
+.screen::before {
+	background: transparent linear-gradient(to bottom, #85908c 0%, #323431 100%)
+		repeat scroll 0 0;
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate3d(-50%, -50%, 0);
+	width: 100%;
+	height: 100%;
+	z-index: -1;
+}
+
+.scanlines .overlay {
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
+	z-index: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.scanlines .overlay::after {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/86186/crt.png");
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+	content: "";
+}
+.scanlines .overlay::before {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	content: " ";
+	background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+		linear-gradient(
+			90deg,
+			rgba(255, 0, 0, 0.06),
+			rgba(0, 255, 0, 0.02),
+			rgba(0, 0, 255, 0.06)
+		);
+	z-index: 2;
+	background-size: 100% 2px, 3px 100%;
+	pointer-events: none;
+}
+
+.picture {
+	height: 100vh;
+	overflow: hidden;
+	width: 100vw;
+	z-index: -1;
+	transform: scale(0, 0);
+	background: transparent linear-gradient(to bottom, #85908c 0%, #323431 100%)
+		repeat scroll 0 0;
+}
+
+.on .picture {
+	animation: 3000ms linear 0ms normal forwards 1 running on;
+}
+
+.off .picture {
+	animation: 750ms cubic-bezier(0.23, 1, 0.32, 1) 0ms normal forwards 1 running
+		off;
+}
+
+@keyframes on {
+	0% {
+		transform: scale(1, 0.8) translate3d(0, 0, 0);
+		filter: brightness(4);
+		opacity: 1;
+	}
+	3.5% {
+		transform: scale(1, 0.8) translate3d(0, 100%, 0);
+	}
+	3.6% {
+		transform: scale(1, 0.8) translate3d(0, -100%, 0);
+		opacity: 1;
+	}
+	9% {
+		transform: scale(1.3, 0.6) translate3d(0, 100%, 0);
+		filter: brightness(4);
+		opacity: 0;
+	}
+	11% {
+		transform: scale(1, 1) translate3d(0, 0, 0);
+		filter: contrast(0) brightness(0);
+		opacity: 0;
+	}
+	100% {
+		transform: scale(1, 1) translate3d(0, 0, 0);
+		filter: contrast(1) brightness(1.2) saturate(1.3);
+		opacity: 1;
+	}
+}
+@keyframes off {
+	0% {
+		transform: scale(1, 1);
+		filter: brightness(1);
+	}
+	40% {
+		transform: scale(1, 0.005);
+		filter: brightness(100);
+	}
+	70% {
+		transform: scale(1, 0.005);
+	}
+	90% {
+		transform: scale(0.005, 0.005);
+	}
+	100% {
+		transform: scale(0, 0);
+	}
+}
+@keyframes blur {
+	0% {
+		filter: blur(1px);
+		opacity: 0.8;
+	}
+	50% {
+		filter: blur(1px);
+		opacity: 1;
+	}
+	100% {
+		filter: blur(1px);
+		opacity: 0.8;
+	}
+}
