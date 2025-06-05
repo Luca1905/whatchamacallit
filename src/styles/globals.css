@@ -170,7 +170,7 @@
 }
 
 body {
-	background: #1b2838 none repeat scroll 0 0;
+	background: radial-gradient(circle, #ffffff 20%, #87ceeb 100%);
 	margin: 0;
 	overflow: hidden;
 	height: 100vh;
@@ -178,7 +178,7 @@ body {
 }
 
 .screen::before {
-	background: transparent linear-gradient(to bottom, #85908c 0%, #323431 100%)
+	background: transparent radial-gradient(circle, #ffffff 30%, #b8d4f0 100%)
 		repeat scroll 0 0;
 	content: "";
 	position: absolute;
@@ -219,12 +219,15 @@ body {
 	bottom: 0;
 	right: 0;
 	content: " ";
-	background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+	background: linear-gradient(
+			rgba(255, 255, 255, 0) 50%,
+			rgba(135, 206, 235, 0.1) 50%
+		),
 		linear-gradient(
 			90deg,
-			rgba(255, 0, 0, 0.06),
-			rgba(0, 255, 0, 0.02),
-			rgba(0, 0, 255, 0.06)
+			rgba(135, 206, 250, 0.03),
+			rgba(255, 255, 255, 0.01),
+			rgba(176, 224, 230, 0.03)
 		);
 	z-index: 2;
 	background-size: 100% 2px, 3px 100%;
@@ -237,7 +240,7 @@ body {
 	width: 100vw;
 	z-index: -1;
 	transform: scale(0, 0);
-	background: transparent linear-gradient(to bottom, #85908c 0%, #323431 100%)
+	background: transparent radial-gradient(circle, #ffffff 25%, #b8d4f0 100%)
 		repeat scroll 0 0;
 }
 

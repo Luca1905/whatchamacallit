@@ -25,7 +25,7 @@ export function LatestPost(props: {
 	}
 
 	return (
-		<div className="w-full max-w-xs">
+		<div className="w-full max-w-xs text-black">
 			<p>Hello {username ?? "User"}</p>{" "}
 			{latestPost ? (
 				<p className="truncate">Your most recent post: {latestPost.name}</p>
@@ -41,14 +41,14 @@ export function LatestPost(props: {
 			>
 				<input
 					type="text"
-					placeholder="Title"
+					placeholder="..."
 					value={name}
 					onChange={(e) => setName(e.target.value)}
-					className="w-full rounded-full bg-white/10 px-4 py-2 text-white"
+					className="w-full rounded-full border border-gray-400 px-4 py-2 text-black focus:border-blue-500 focus:outline-none"
 				/>
 				<button
 					type="submit"
-					className="rounded-full bg-white/10 px-10 py-3 font-semibold transition hover:bg-white/20"
+					className="rounded-full bg-white/10 px-10 py-3 font-semibold transition"
 				>
 					submit
 				</button>
