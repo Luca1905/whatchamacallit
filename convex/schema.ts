@@ -10,5 +10,10 @@ export default defineSchema({
 	posts: defineTable({
 		name: v.string(),
 	}),
+	players: defineTable({
+		userId: v.id("users"),
+		score: v.number(),
+		isDoctor: v.boolean(),
+	}),
 	...authTables,
 });
