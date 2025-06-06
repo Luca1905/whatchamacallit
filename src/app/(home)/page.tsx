@@ -1,11 +1,18 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import GameScreen from "@/components/game/game-screen";
+import MenuScreen from "@/components/game/menu-screen";
+import ResultsScreen from "@/components/game/results-screen";
+import SetupScreen from "@/components/game/setup-screen";
+import { GameProvider } from "@/context/game-context";
 import { useConvexAuth } from "convex/react";
-import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function Home() {
+	const [currentScreen, setCurrentScreen] = useState<
+		"menu" | "setup" | "game" | "results"
+	>("menu");
 	const { isAuthenticated } = useConvexAuth();
 	const router = useRouter();
 
@@ -24,18 +31,22 @@ export default function Home() {
 				<h1 className="overflow-visible bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text font-extrabold text-7xl text-transparent tracking-tight sm:text-8xl md:text-9xl">
 					whatchamacallit
 				</h1>
-				<div className="relative z-10">
-					<form onSubmit={handleFormSubmit}>
-						<Button
-							type="submit"
-							size="lg"
-							className="bg-primary text-primary-foreground hover:bg-primary/90"
-						>
-							Get Started
-							<ArrowRight className="ml-2 h-4 w-4" />
-						</Button>
-					</form>
-				</div>
+				<GameProvider>
+					<div className="font-sans antialiased">
+						{currentScreen === "menu" && (
+							<MenuScreen onNavigate={setCurrentScreen} />
+						)}
+						{currentScreen === "setup" && (
+							<SetupScreen onNavigate={setCurrentScreen} />
+						)}
+						{currentScreen === "game" && (
+							<GameScreen onNavigate={setCurrentScreen} />
+						)}
+						{currentScreen === "results" && (
+							<ResultsScreen onNavigate={setCurrentScreen} />
+						)}
+					</div>
+				</GameProvider>
 			</div>
 		</>
 	);
