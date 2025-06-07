@@ -20,6 +20,11 @@
 					}
 				}
 			},
+			"a11y": {
+				"useSemanticElements": {
+					"level": "off"
+				}
+			},
 			"recommended": true
 		}
 	}
