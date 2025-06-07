@@ -1,8 +1,16 @@
 "use client";
 
-import { addPlayer, nextRound, startGame, submitAnswer } from "@/lib/game-service";
+import {
+	addPlayer,
+	nextRound,
+	startGame,
+	submitAnswer,
+} from "@/lib/game-service";
 import type { GameState } from "@/lib/game-types";
 import { type ReactNode, createContext, useContext, useState } from "react";
+import { api } from "@/../convex/_generated/api";
+import { useMutation } from "convex/react";
+import type { Id } from "convex/_generated/dataModel";
 
 interface GameContextType {
 	gameState: GameState;
@@ -14,6 +22,9 @@ interface GameContextType {
 	revealAnswers: () => void;
 	nextRound: () => void;
 	resetGame: () => void;
+	roomId: Id<"rooms"> | null;
+	createRoom: () => void;
+	joinRoom: (id: Id<"rooms">) => Promise<void>;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -32,6 +43,9 @@ const initialState: GameState = {
 
 export function GameProvider({ children }: { children: ReactNode }) {
 	const [gameState, setGameState] = useState<GameState>(initialState);
+	const [roomId, setRoomId] = useState<Id<"rooms"> | null>(null);
+	const createRoomMutation = useMutation(api.rooms.createRoom);
+	const joinRoomMutation = useMutation(api.rooms.joinRoom);
 
 	const handleAddPlayer = (name: string) => {
 		const result = addPlayer(gameState, name);
@@ -95,6 +109,24 @@ export function GameProvider({ children }: { children: ReactNode }) {
 		});
 	};
 
+	const handleCreateRoom = async () => {
+		try {
+			const newRoomId = await createRoomMutation({});
+			setRoomId(String(newRoomId));
+		} catch (e) {
+			console.error(e);
+		}
+	};
+
+	const handleJoinRoom = async (id: Id<"rooms">) => {
+		try {
+			await joinRoomMutation({ roomId: id });
+			setRoomId(id);
+		} catch (e) {
+			console.error(e);
+		}
+	};
+
 	return (
 		<GameContext.Provider
 			value={{
@@ -107,6 +139,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
 				revealAnswers,
 				nextRound: handleNextRound,
 				resetGame,
+				roomId,
+				createRoom: handleCreateRoom,
+				joinRoom: handleJoinRoom,
 			}}
 		>
 			{children}

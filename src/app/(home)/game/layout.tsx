@@ -1,6 +1,8 @@
 import { GameProvider } from "@/context/game-context";
 
-export default function GameLayout({ children }: { children: React.ReactNode }) {
+export default function GameLayout({
+	children,
+}: { children: React.ReactNode }) {
 	return (
 		<GameProvider>
 			<div className="font-sans antialiased">

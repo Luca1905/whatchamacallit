@@ -3,9 +3,24 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useGameContext } from "@/context/game-context";
+import { useEffect } from "react";
 
 export default function AnswersList() {
 	const { gameState, selectAnswer } = useGameContext();
+
+	// Keyboard shortcut: press A, B, C, D keys to select answers
+	useEffect(() => {
+		function handleKeyDown(e: KeyboardEvent) {
+			const key = e.key.toUpperCase();
+			const index = key.charCodeAt(0) - 65;
+			if (index >= 0 && index < gameState.roundState.answers.length) {
+				const ans = gameState.roundState.answers[index];
+				if (ans) selectAnswer(ans.answer);
+			}
+		}
+		window.addEventListener("keydown", handleKeyDown);
+		return () => window.removeEventListener("keydown", handleKeyDown);
+	}, [gameState.roundState.answers, selectAnswer]);
 
 	return (
 		<div className="grid gap-3">

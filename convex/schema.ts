@@ -15,5 +15,9 @@ export default defineSchema({
 		score: v.number(),
 		isDoctor: v.boolean(),
 	}),
+	rooms: defineTable({
+		hostId: v.id("users"),
+		playerIds: v.array(v.id("users")),
+	}),
 	...authTables,
 });

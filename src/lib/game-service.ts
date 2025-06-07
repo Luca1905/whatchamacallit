@@ -32,7 +32,10 @@ function validateStateTransition(
 	return { success: true, data: undefined };
 }
 
-export function addPlayer(state: GameState, name: string): GameActionResult<Player> {
+export function addPlayer(
+	state: GameState,
+	name: string,
+): GameActionResult<Player> {
 	if (state.players.length >= 8) {
 		return {
 			success: false,
@@ -55,7 +58,10 @@ export function addPlayer(state: GameState, name: string): GameActionResult<Play
 }
 
 export function startGame(state: GameState): GameActionResult<GameState> {
-	const transitionResult = validateStateTransition(state.gamePhase, "answering");
+	const transitionResult = validateStateTransition(
+		state.gamePhase,
+		"answering",
+	);
 	if (!transitionResult.success) return transitionResult;
 
 	if (state.players.length < 2) {
@@ -173,7 +179,10 @@ export function nextRound(state: GameState): GameActionResult<GameState> {
 		};
 	}
 
-	const transitionResult = validateStateTransition(state.gamePhase, "answering");
+	const transitionResult = validateStateTransition(
+		state.gamePhase,
+		"answering",
+	);
 	if (!transitionResult.success) return transitionResult;
 
 	const newPrompt = prompts[Math.floor(Math.random() * prompts.length)];

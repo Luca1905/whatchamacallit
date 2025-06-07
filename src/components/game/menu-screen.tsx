@@ -31,9 +31,11 @@ export default function MenuScreen({ onNavigate }: MenuScreenProps) {
 				<Card
 					role="button"
 					tabIndex={0}
-					className="group focus:outline-none focus:ring-2 focus:ring-green-400 cursor-pointer border-0 bg-gradient-to-br from-green-400 to-green-500 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+					className="group cursor-pointer border-0 bg-gradient-to-br from-green-400 to-green-500 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-green-400"
 					onClick={() => onNavigate("setup")}
-					onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onNavigate("setup")}
+					onKeyDown={(e) =>
+						(e.key === "Enter" || e.key === " ") && onNavigate("setup")
+					}
 				>
 					<CardContent className="p-8 text-center text-white">
 						<Play className="mx-auto mb-4 h-12 w-12 transition-transform group-hover:scale-110" />

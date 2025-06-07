@@ -15,8 +15,36 @@ interface SetupScreenProps {
 }
 
 export default function SetupScreen({ onNavigate }: SetupScreenProps) {
-	const { gameState, addPlayer, startGame } = useGameContext();
+	const { gameState, addPlayer, startGame, roomId, createRoom, joinRoom } = useGameContext();
 	const [newPlayerName, setNewPlayerName] = useState("");
+	const [joinId, setJoinId] = useState("");
+
+	// If no room, prompt to create or join
+	if (!roomId) {
+		return (
+			<div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 p-6">
+				<div className="mx-auto max-w-md text-center">
+					<h2 className="font-bold text-4xl text-blue-600">Multiplayer Lobby</h2>
+					<div className="mt-8 space-y-4">
+						<Button onClick={createRoom} size="lg" className="w-full bg-green-500 hover:bg-green-600">
+							Create Room
+						</Button>
+						<div className="flex gap-2">
+							<Input
+								placeholder="Enter Room ID"
+								value={joinId}
+								onChange={(e) => setJoinId(e.target.value)}
+								onKeyPress={(e) => e.key === "Enter" && joinRoom(joinId)}
+							/>
+							<Button onClick={() => joinRoom(joinId)} disabled={!joinId.trim()}>
+								Join Room
+							</Button>
+						</div>
+					</div>
+				</div>
+			</div>
+		);
+	}
 
 	const handleAddPlayer = () => {
 		if (newPlayerName.trim()) {
