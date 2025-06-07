@@ -7,9 +7,6 @@ import { v } from "convex/values";
 // app will continue to work.
 // The schema provides more precise TypeScript types.
 export default defineSchema({
-	posts: defineTable({
-		name: v.string(),
-	}),
 	players: defineTable({
 		userId: v.id("users"),
 		score: v.number(),
