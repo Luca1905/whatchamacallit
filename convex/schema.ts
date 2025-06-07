@@ -14,10 +14,12 @@ export default defineSchema({
 		userId: v.id("users"),
 		score: v.number(),
 		isDoctor: v.boolean(),
-	}),
+	}).index("by_userId", ["userId"]),
+
 	rooms: defineTable({
 		hostId: v.id("users"),
-		playerIds: v.array(v.id("users")),
-	}),
+		playerIds: v.array(v.id("players")),
+    roomCode: v.string(),
+	}).index("by_room_code", ["roomCode"]),
 	...authTables,
 });
