@@ -14,7 +14,7 @@ import { Crown, Send, Shuffle, Star } from "lucide-react";
 import { useState } from "react";
 
 interface GameScreenProps {
-	onNavigate: (screen: "menu" | "setup" | "game" | "results") => void;
+	onNavigate: (screen: "menu" | "setup" | "play" | "results") => void;
 }
 
 export default function GameScreen({ onNavigate }: GameScreenProps) {
@@ -31,7 +31,7 @@ export default function GameScreen({ onNavigate }: GameScreenProps) {
 
 	const handleNextRound = () => {
 		nextRound();
-		if (gameState.currentRound >= gameState.totalRounds) {
+		if (gameState.roundState.currentRound >= gameState.roundState.totalRounds) {
 			onNavigate("results");
 		}
 	};
@@ -44,10 +44,15 @@ export default function GameScreen({ onNavigate }: GameScreenProps) {
 					<div>
 						<h2 className="flex items-center gap-2 font-bold text-3xl text-green-600">
 							<Star className="h-8 w-8" />
-							Round {gameState.currentRound} of {gameState.totalRounds}
+							Round {gameState.roundState.currentRound} of{" "}
+							{gameState.roundState.totalRounds}
 						</h2>
 						<Progress
-							value={(gameState.currentRound / gameState.totalRounds) * 100}
+							value={
+								(gameState.roundState.currentRound /
+									gameState.roundState.totalRounds) *
+								100
+							}
 							className="mt-2 w-64"
 						/>
 					</div>
@@ -56,7 +61,7 @@ export default function GameScreen({ onNavigate }: GameScreenProps) {
 				</div>
 
 				{/* Current Prompt */}
-				<PromptCard prompt={gameState.currentPrompt} />
+				<PromptCard prompt={gameState.roundState.currentPrompt} />
 
 				{/* Game Phase Content */}
 				{gameState.gamePhase === "answering" && (
@@ -110,7 +115,7 @@ export default function GameScreen({ onNavigate }: GameScreenProps) {
 							<div className="flex justify-center">
 								<Button
 									onClick={revealAnswers}
-									disabled={!gameState.selectedAnswer}
+									disabled={!gameState.roundState.selectedAnswer}
 									size="lg"
 									className="bg-blue-500 px-8 hover:bg-blue-600"
 								>
@@ -128,7 +133,7 @@ export default function GameScreen({ onNavigate }: GameScreenProps) {
 						</CardHeader>
 						<CardContent className="space-y-6">
 							<div className="grid gap-4">
-								{gameState.answers.map((answer, index) => (
+								{gameState.roundState.answers.map((answer, index) => (
 									<div
 										key={answer.id}
 										className={`rounded-lg border-2 p-4 ${
@@ -165,8 +170,8 @@ export default function GameScreen({ onNavigate }: GameScreenProps) {
 
 							<div className="text-center">
 								<p className="mb-4 text-lg">
-									{gameState.selectedAnswer ===
-									gameState.answers.find((a) => a.isDoctor)?.answer
+									{gameState.roundState.selectedAnswer ===
+									gameState.roundState.answers.find((a) => a.isDoctor)?.answer
 										? "🎉 Correct! You found Dr. Whatchamacallit's answer!"
 										: "❌ Wrong guess! Better luck next round!"}
 								</p>
@@ -175,7 +180,8 @@ export default function GameScreen({ onNavigate }: GameScreenProps) {
 									size="lg"
 									className="bg-green-500 px-8 hover:bg-green-600"
 								>
-									{gameState.currentRound >= gameState.totalRounds
+									{gameState.roundState.currentRound >=
+									gameState.roundState.totalRounds
 										? "View Final Results"
 										: "Next Round"}
 									<Shuffle className="ml-2 h-5 w-5" />

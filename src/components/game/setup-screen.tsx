@@ -11,7 +11,7 @@ import { ArrowLeft, Play, Plus, Users } from "lucide-react";
 import { useState } from "react";
 
 interface SetupScreenProps {
-	onNavigate: (screen: "menu" | "setup" | "game" | "results") => void;
+	onNavigate: (screen: "menu" | "setup" | "play" | "results") => void;
 }
 
 export default function SetupScreen({ onNavigate }: SetupScreenProps) {
@@ -27,7 +27,7 @@ export default function SetupScreen({ onNavigate }: SetupScreenProps) {
 
 	const handleStartGame = () => {
 		startGame();
-		onNavigate("game");
+		onNavigate("play");
 	};
 
 	return (
@@ -115,7 +115,7 @@ export default function SetupScreen({ onNavigate }: SetupScreenProps) {
 								<h3 className="mb-2 font-semibold text-xl">Ready to Play?</h3>
 								<p className="text-muted-foreground">
 									{gameState.players.length >= 2
-										? `${gameState.players.length} players ready • ${gameState.totalRounds} rounds`
+										? `${gameState.players.length} players ready • ${gameState.roundState.totalRounds} rounds`
 										: "Add at least 2 players to continue"}
 								</p>
 							</div>

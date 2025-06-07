@@ -9,11 +9,13 @@ export default function AnswersList() {
 
 	return (
 		<div className="grid gap-3">
-			{gameState.answers.map((answer, index) => (
+			{gameState.roundState.answers.map((answer, index) => (
 				<Button
 					key={answer.id}
 					variant={
-						gameState.selectedAnswer === answer.answer ? "default" : "outline"
+						gameState.roundState.selectedAnswer === answer.answer
+							? "default"
+							: "outline"
 					}
 					onClick={() => selectAnswer(answer.answer)}
 					className="h-auto justify-start p-6 text-left text-lg transition-transform hover:scale-[1.02]"

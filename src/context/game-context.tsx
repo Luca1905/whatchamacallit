@@ -1,7 +1,7 @@
 "use client";
 
-import { avatarColors, prompts } from "@/lib/game-data";
-import type { Answer, GameState, Player } from "@/lib/game-types";
+import { addPlayer, nextRound, startGame, submitAnswer } from "@/lib/game-service";
+import type { GameState } from "@/lib/game-types";
 import { type ReactNode, createContext, useContext, useState } from "react";
 
 interface GameContextType {
@@ -18,29 +18,27 @@ interface GameContextType {
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
-export function GameProvider({ children }: { children: ReactNode }) {
-	const [gameState, setGameState] = useState<GameState>({
-		players: [],
+const initialState: GameState = {
+	players: [],
+	roundState: {
 		currentRound: 0,
 		totalRounds: 5,
 		currentPrompt: "",
 		answers: [],
 		selectedAnswer: null,
-		gamePhase: "waiting",
-	});
+	},
+	gamePhase: "waiting",
+};
 
-	const addPlayer = (name: string) => {
-		if (name.trim() && gameState.players.length < 8) {
-			const newPlayer: Player = {
-				id: Date.now().toString(),
-				name: name.trim(),
-				score: 0,
-				isDoctor: gameState.players.length === 0,
-				avatar: avatarColors[gameState.players.length % avatarColors.length],
-			};
+export function GameProvider({ children }: { children: ReactNode }) {
+	const [gameState, setGameState] = useState<GameState>(initialState);
+
+	const handleAddPlayer = (name: string) => {
+		const result = addPlayer(gameState, name);
+		if (result.success) {
 			setGameState((prev) => ({
 				...prev,
-				players: [...prev.players, newPlayer],
+				players: [...prev.players, result.data],
 			}));
 		}
 	};
@@ -52,65 +50,27 @@ export function GameProvider({ children }: { children: ReactNode }) {
 		}));
 	};
 
-	const startGame = () => {
-		if (gameState.players.length >= 2) {
-			setGameState((prev) => ({
-				...prev,
-				currentPrompt: prompts[Math.floor(Math.random() * prompts.length)],
-				currentRound: 1,
-				gamePhase: "answering",
-			}));
+	const handleStartGame = () => {
+		const result = startGame(gameState);
+		if (result.success) {
+			setGameState(result.data);
 		}
 	};
 
-	const submitAnswer = (playerAnswer: string) => {
-		if (playerAnswer.trim()) {
-			const doctorPlayer = gameState.players.find((p) => p.isDoctor);
-			const doctorAnswer = `${playerAnswer} (but with extra mystery!)`;
-
-			const allAnswers: Answer[] = [
-				{
-					playerId: "player",
-					playerName: "You",
-					answer: playerAnswer,
-					isDoctor: false,
-				},
-				{
-					playerId: doctorPlayer?.id || "",
-					playerName: doctorPlayer?.name || "Dr. Whatchamacallit",
-					answer: doctorAnswer,
-					isDoctor: true,
-				},
-				// Add some AI-generated fake answers for variety
-				{
-					playerId: "ai1",
-					playerName: "Mystery Player",
-					answer: "chocolate-covered pickles",
-					isDoctor: false,
-				},
-				{
-					playerId: "ai2",
-					playerName: "Mystery Player",
-					answer: "my neighbor's lawn gnome",
-					isDoctor: false,
-				},
-			];
-
-			// Shuffle answers
-			const shuffledAnswers = allAnswers.sort(() => Math.random() - 0.5);
-
-			setGameState((prev) => ({
-				...prev,
-				answers: shuffledAnswers,
-				gamePhase: "guessing",
-			}));
+	const handleSubmitAnswer = (playerAnswer: string) => {
+		const result = submitAnswer(gameState, playerAnswer);
+		if (result.success) {
+			setGameState(result.data);
 		}
 	};
 
 	const selectAnswer = (answer: string) => {
 		setGameState((prev) => ({
 			...prev,
-			selectedAnswer: answer,
+			roundState: {
+				...prev.roundState,
+				selectedAnswer: answer,
+			},
 		}));
 	};
 
@@ -121,46 +81,17 @@ export function GameProvider({ children }: { children: ReactNode }) {
 		}));
 	};
 
-	const nextRound = () => {
-		// Award points logic would go here
-		const correctAnswer = gameState.answers.find((a) => a.isDoctor)?.answer;
-
-		if (gameState.selectedAnswer === correctAnswer) {
-			// Update player scores
-			setGameState((prev) => ({
-				...prev,
-				players: prev.players.map((player) =>
-					player.id === "player"
-						? { ...player, score: player.score + 10 }
-						: player,
-				),
-			}));
+	const handleNextRound = () => {
+		const result = nextRound(gameState);
+		if (result.success) {
+			setGameState(result.data);
 		}
-
-		if (gameState.currentRound >= gameState.totalRounds) {
-			return;
-		}
-
-		const newPrompt = prompts[Math.floor(Math.random() * prompts.length)];
-		setGameState((prev) => ({
-			...prev,
-			currentPrompt: newPrompt,
-			currentRound: prev.currentRound + 1,
-			answers: [],
-			selectedAnswer: null,
-			gamePhase: "answering",
-		}));
 	};
 
 	const resetGame = () => {
 		setGameState({
+			...initialState,
 			players: gameState.players,
-			currentRound: 0,
-			totalRounds: 5,
-			currentPrompt: "",
-			answers: [],
-			selectedAnswer: null,
-			gamePhase: "waiting",
 		});
 	};
 
@@ -168,13 +99,13 @@ export function GameProvider({ children }: { children: ReactNode }) {
 		<GameContext.Provider
 			value={{
 				gameState,
-				addPlayer,
+				addPlayer: handleAddPlayer,
 				removePlayer,
-				startGame,
-				submitAnswer,
+				startGame: handleStartGame,
+				submitAnswer: handleSubmitAnswer,
 				selectAnswer,
 				revealAnswers,
-				nextRound,
+				nextRound: handleNextRound,
 				resetGame,
 			}}
 		>

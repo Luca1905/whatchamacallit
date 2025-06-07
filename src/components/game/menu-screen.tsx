@@ -5,12 +5,12 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Gamepad2, Play, Settings, Trophy, Users } from "lucide-react";
 
 interface MenuScreenProps {
-	onNavigate: (screen: "menu" | "setup" | "game" | "results") => void;
+	onNavigate: (screen: "menu" | "setup" | "play" | "results") => void;
 }
 
 export default function MenuScreen({ onNavigate }: MenuScreenProps) {
 	return (
-		<div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-50 p-6">
+		<div className="relative z-10 flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-50 p-6">
 			<div className="mb-12 space-y-4 text-center">
 				<div className="mb-6 flex items-center justify-center gap-3">
 					<Gamepad2 className="h-12 w-12 text-blue-600" />
@@ -29,8 +29,11 @@ export default function MenuScreen({ onNavigate }: MenuScreenProps) {
 
 			<div className="grid w-full max-w-lg grid-cols-2 gap-6">
 				<Card
-					className="group cursor-pointer border-0 bg-gradient-to-br from-green-400 to-green-500 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+					role="button"
+					tabIndex={0}
+					className="group focus:outline-none focus:ring-2 focus:ring-green-400 cursor-pointer border-0 bg-gradient-to-br from-green-400 to-green-500 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
 					onClick={() => onNavigate("setup")}
+					onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onNavigate("setup")}
 				>
 					<CardContent className="p-8 text-center text-white">
 						<Play className="mx-auto mb-4 h-12 w-12 transition-transform group-hover:scale-110" />

@@ -8,7 +8,7 @@ import { useGameContext } from "@/context/game-context";
 import { Crown, Trophy } from "lucide-react";
 
 interface ResultsScreenProps {
-	onNavigate: (screen: "menu" | "setup" | "game" | "results") => void;
+	onNavigate: (screen: "menu" | "setup" | "play" | "results") => void;
 }
 
 export default function ResultsScreen({ onNavigate }: ResultsScreenProps) {
