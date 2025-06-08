@@ -30,7 +30,7 @@ interface GameContextType {
 	joinRoom: (roomCode: string) => Promise<void>;
 }
 
-const GameContext = createContext<GameContextType | undefined>(undefined);
+const GameContext = createContext(undefined);
 
 const initialState: GameState = {
 	players: [],
@@ -45,8 +45,8 @@ const initialState: GameState = {
 };
 
 export function GameProvider({ children }: { children: ReactNode }) {
-	const [roomCode, setRoomCode] = useState<string | null>(null);
-	const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+	const [roomCode, setRoomCode] = useState(null);
+	const [selectedAnswer, setSelectedAnswer] = useState(null);
 
 	// Cast to any to accommodate possible lag in Convex codegen during development
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any

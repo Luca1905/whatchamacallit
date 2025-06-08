@@ -37,8 +37,8 @@ export default function ResultsScreen() {
 					<CardContent>
 						<div className="space-y-4">
 							{gameState.players
-								.sort((a, b) => b.score - a.score)
-								.map((player, index) => (
+								.sort((a: any, b: any) => b.score - a.score)
+								.map((player: any, index: number) => (
 									<div
 										key={player.id}
 										className="flex items-center justify-between rounded-lg bg-muted/50 p-4"

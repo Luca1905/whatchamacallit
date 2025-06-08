@@ -119,16 +119,18 @@ declare global {
 
 // React types fix
 declare module "react" {
-	interface ComponentPropsWithoutRef<T extends React.ElementType> {
-		[key: string]: any;
+	export class Component<P = {}, S = {}> {
+		constructor(props?: P, context?: any) {}
+		props: P;
+		state: S;
+		context: any;
+		refs: any;
+		setState: (state: Partial<S>) => void;
+		forceUpdate: () => void;
+		render(): any;
+		componentDidCatch?(error: any, errorInfo: any): void;
+		static getDerivedStateFromError?(error: any): any;
 	}
-
-	interface ComponentProps<T extends React.ElementType> {
-		[key: string]: any;
-	}
-
-	// Core React
-	export const Component: any;
 	export const useState: any;
 	export const useEffect: any;
 	export const useMemo: any;
@@ -143,4 +145,75 @@ declare module "react" {
 	export type FC<P = {}> = any;
 	export type Ref<T> = any;
 	export type ErrorInfo = any;
+
+	interface ComponentPropsWithoutRef<T extends React.ElementType> {
+		[key: string]: any;
+	}
+
+	interface ComponentProps<T extends React.ElementType> {
+		[key: string]: any;
+	}
+}
+
+declare module "convex/react" {
+	export const useMutation: any;
+	export const useQuery: any;
+	export const useConvexAuth: any;
+	export const ConvexProvider: any;
+	export const ConvexReactClient: any;
+}
+
+declare module "class-variance-authority" {
+	export const cva: any;
+	export type VariantProps<T> = any;
+}
+
+declare module "@radix-ui/react-slot" {
+	import * as React from "react";
+	export const Slot: React.FC<any>;
+}
+
+declare module "@radix-ui/react-avatar" {
+	import * as React from "react";
+	export const Root: React.FC<any>;
+	export const Image: React.FC<any>;
+	export const Fallback: React.FC<any>;
+	export type AvatarProps = any;
+	export type AvatarImageProps = any;
+	export type AvatarFallbackProps = any;
+}
+
+declare module "@radix-ui/react-progress" {
+	import * as React from "react";
+	export const Root: React.FC<any>;
+	export const Indicator: React.FC<any>;
+	export type ProgressProps = any;
+	export type ProgressIndicatorProps = any;
+}
+
+declare module "@radix-ui/react-separator" {
+	import * as React from "react";
+	export const Root: React.FC<any>;
+	export type SeparatorProps = any;
+}
+
+declare module "tailwind-merge" {
+	export const twMerge: any;
+}
+
+declare module "clsx" {
+	export type ClassValue = any;
+	export const clsx: any;
+}
+
+declare module "react/jsx-runtime" {
+	export const jsx: any;
+	export const jsxs: any;
+	export const Fragment: any;
+}
+
+declare module "react/jsx-dev-runtime" {
+	export const jsx: any;
+	export const jsxs: any;
+	export const Fragment: any;
 }

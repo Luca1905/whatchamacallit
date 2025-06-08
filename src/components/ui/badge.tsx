@@ -28,7 +28,7 @@ const badgeVariants = cva(
 type BadgeProps = React.ComponentPropsWithoutRef<"span"> &
 	VariantProps<typeof badgeVariants> & { asChild?: boolean };
 
-const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
+const Badge = React.forwardRef(
 	(
 		{ className, variant, asChild = false, ...props }: BadgeProps,
 		ref: React.Ref<HTMLSpanElement>,

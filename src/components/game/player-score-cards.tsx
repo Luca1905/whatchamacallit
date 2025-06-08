@@ -9,7 +9,7 @@ export default function PlayerScoreCards() {
 
 	return (
 		<div className="flex gap-4">
-			{gameState.players.slice(0, 4).map((player) => (
+			{gameState.players.slice(0, 4).map((player: any) => (
 				<Card key={player.id} className="border-0 shadow-md">
 					<CardContent className="p-4 text-center">
 						<Avatar className={`${player.avatar} mx-auto mb-2 text-white`}>

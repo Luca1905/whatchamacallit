@@ -21,7 +21,7 @@ export default function UsernameSetup() {
 		}
 	}, [player, router]);
 
-	async function handleSubmit(e: React.FormEvent) {
+	async function handleSubmit(e: any) {
 		e.preventDefault();
 		if (!username.trim()) return;
 
@@ -49,7 +49,7 @@ export default function UsernameSetup() {
 					<Input
 						placeholder="Enter your username..."
 						value={username}
-						onChange={(e) => setUsername(e.target.value)}
+						onChange={(e: any) => setUsername(e.target.value)}
 						className="text-center text-lg"
 						maxLength={20}
 					/>

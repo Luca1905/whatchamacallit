@@ -63,8 +63,8 @@ export default function SetupScreen() {
 						<Input
 							placeholder="Enter room code..."
 							value={joinId}
-							onChange={(e) => setJoinId(e.target.value)}
-							onKeyDown={(e) => e.key === "Enter" && joinRoom(joinId)}
+							onChange={(e: any) => setJoinId(e.target.value)}
+							onKeyDown={(e: any) => e.key === "Enter" && joinRoom(joinId)}
 						/>
 						<Button onClick={() => joinRoom(joinId)} disabled={!joinId.trim()}>
 							Join Room
