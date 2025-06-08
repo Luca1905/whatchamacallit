@@ -117,7 +117,7 @@ export const startGame = mutation({
       }
     }
     if (!doctorAssigned) {
-      const firstPlayerId = room.playerIds[0];
+      const firstPlayerId = room.playerIds[0]!;
       await ctx.db.patch(firstPlayerId, { isDoctor: true });
     }
 
@@ -138,7 +138,7 @@ export const startGame = mutation({
       currentRound: 1,
       totalRounds: totalRounds ?? 5,
       currentPrompt: newPrompt,
-      selectedAnswer: null,
+      selectedAnswer: undefined,
     });
     return null;
   },
@@ -257,7 +257,7 @@ export const nextRound = mutation({
       gamePhase: "answering",
       currentRound: game.currentRound + 1,
       currentPrompt: newPrompt,
-      selectedAnswer: null,
+      selectedAnswer: undefined,
     });
     return null;
   },
