@@ -18,11 +18,11 @@ export default function ResultsScreen() {
 	};
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50 p-6">
+		<div className="min-h-screen p-6">
 			<div className="mx-auto max-w-4xl text-center">
 				<div className="mb-8">
 					<Trophy className="mx-auto mb-4 h-16 w-16 text-yellow-500" />
-					<h2 className="mb-2 font-bold text-4xl text-purple-600">
+					<h2 className="mb-2 font-bold text-4xl text-primary">
 						Game Complete!
 					</h2>
 					<p className="text-muted-foreground text-xl">
@@ -76,7 +76,6 @@ export default function ResultsScreen() {
 					<Button
 						onClick={() => router.push("/game/lobby")}
 						size="lg"
-						className="bg-purple-500 hover:bg-purple-600"
 					>
 						Back to Menu
 					</Button>

@@ -23,10 +23,10 @@ export default function SetupScreen() {
 
 	if (isAuthLoading) {
 		return (
-			<div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 p-6 flex items-center justify-center">
+			<div className="flex min-h-screen items-center justify-center p-6">
 				<div className="text-center">
-					<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-					<p className="mt-4 text-blue-600">Loading...</p>
+					<div className="mx-auto h-12 w-12 animate-spin rounded-full border-primary border-b-2" />
+					<p className="mt-4 text-primary">Loading...</p>
 				</div>
 			</div>
 		);
@@ -38,14 +38,14 @@ export default function SetupScreen() {
 	}
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 p-6">
+		<div className="min-h-screen p-6">
 			<div className="mx-auto max-w-md text-center">
-				<h2 className="font-bold text-4xl text-blue-600">Multiplayer Lobby</h2>
+				<h2 className="font-bold text-4xl text-primary">Multiplayer Lobby</h2>
 				<div className="mt-8 space-y-4">
 					<Button
 						onClick={createRoom}
 						size="lg"
-						className="w-full bg-green-500 hover:bg-green-600"
+						className="w-full"
 					>
 						Create Room
 					</Button>

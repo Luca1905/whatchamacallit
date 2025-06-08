@@ -19,11 +19,11 @@ export const getPlayer = query({
 		if (identity === null) {
 			throw new Error("Not authenticated");
 		}
-    try{
-      return await getPlayerByUserid(ctx, identity.tokenIdentifier);
-    } catch (e) {
-      return undefined;
-    }
+		try {
+			return await getPlayerByUserid(ctx, identity.tokenIdentifier);
+		} catch (e) {
+			return undefined;
+		}
 	},
 });
 

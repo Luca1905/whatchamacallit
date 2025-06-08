@@ -17,11 +17,11 @@ interface MenuScreenProps {
 
 export default function MenuScreen({ onNavigate }: MenuScreenProps) {
 	return (
-		<div className="relative z-10 flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-50 p-6">
+		<div className="relative z-10 flex min-h-screen flex-col items-center justify-center p-6">
 			<div className="mb-12 space-y-4 text-center">
 				<div className="mb-6 flex items-center justify-center gap-3">
-					<Gamepad2 className="h-12 w-12 text-blue-600" />
-					<h1 className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text font-bold text-7xl text-transparent">
+					<Gamepad2 className="h-12 w-12 text-primary" />
+					<h1 className="bg-gradient-to-r from-primary to-accent bg-clip-text font-bold text-7xl text-transparent">
 						Whatchamacallit
 					</h1>
 				</div>
