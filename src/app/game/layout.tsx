@@ -1,8 +1,9 @@
-import { GameProvider } from "@/context/game-context";
-import React, { Suspense } from "react";
 import ErrorBoundary from "@/components/error-boundary";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { GameProvider } from "@/context/game-context";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import type React from "react";
+import { Suspense } from "react";
 
 export default function GameLayout({
 	children,

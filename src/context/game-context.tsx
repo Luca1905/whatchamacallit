@@ -1,7 +1,8 @@
 "use client";
 
 import { api } from "@/../convex/_generated/api";
-import type { GameState, Player, Answer } from "@/lib/game-types";
+import { avatarColors } from "@/lib/game-data";
+import type { Answer, GameState, Player } from "@/lib/game-types";
 import { useMutation, useQuery } from "convex/react";
 import {
 	type ReactNode,
@@ -10,7 +11,6 @@ import {
 	useMemo,
 	useState,
 } from "react";
-import { avatarColors } from "@/lib/game-data";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -70,13 +70,15 @@ export function GameProvider({ children }: { children: ReactNode }) {
 	const gameState: GameState = useMemo(() => {
 		if (!backendState) return initialState;
 
-		const players: Player[] = backendState.players.map((p: any, idx: number) => ({
-			id: p._id,
-			name: p.username,
-			score: p.score,
-			isDoctor: p.isDoctor,
-			avatar: p.avatar || avatarColors[idx % avatarColors.length],
-		}));
+		const players: Player[] = backendState.players.map(
+			(p: any, idx: number) => ({
+				id: p._id,
+				name: p.username,
+				score: p.score,
+				isDoctor: p.isDoctor,
+				avatar: p.avatar || avatarColors[idx % avatarColors.length],
+			}),
+		);
 
 		let roundState = {
 			currentRound: 0,
@@ -86,14 +88,16 @@ export function GameProvider({ children }: { children: ReactNode }) {
 			selectedAnswer: selectedAnswer,
 		};
 		if (backendState.roundState) {
-			const answers: Answer[] = backendState.roundState.answers.map((a: any) => ({
-				id: a._id,
-				playerId: a.playerId,
-				playerName:
-					players.find((pl) => pl.id === a.playerId)?.name || "Player",
-				answer: a.answer,
-				isDoctor: a.isDoctor,
-			}));
+			const answers: Answer[] = backendState.roundState.answers.map(
+				(a: any) => ({
+					id: a._id,
+					playerId: a.playerId,
+					playerName:
+						players.find((pl) => pl.id === a.playerId)?.name || "Player",
+					answer: a.answer,
+					isDoctor: a.isDoctor,
+				}),
+			);
 
 			roundState = {
 				currentRound: backendState.roundState.currentRound,

@@ -1,14 +1,14 @@
 "use client";
 
-import React from "react";
 import PlayerList from "@/components/game/player-list";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Separator } from "@/components/ui/separator";
 import { useGameContext } from "@/context/game-context";
 import { ArrowLeft, Play, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import React from "react";
 
 export default function Lobby() {
 	const router = useRouter();

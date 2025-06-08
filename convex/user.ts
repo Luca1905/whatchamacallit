@@ -3,7 +3,8 @@ import { type QueryCtx, mutation, query } from "./_generated/server";
 
 export const getUsername = query({
 	args: {},
-	handler: async (ctx) => {
+	returns: v.string(),
+	handler: async (ctx: any) => {
 		const identity = await ctx.auth.getUserIdentity();
 		if (identity === null) {
 			throw new Error("Not authenticated");
@@ -14,16 +15,17 @@ export const getUsername = query({
 
 export const getPlayer = query({
 	args: {},
-	handler: async (ctx) => {
+	returns: v.optional(v.any()),
+	handler: async (ctx: any) => {
 		const identity = await ctx.auth.getUserIdentity();
 		if (identity === null) {
 			throw new Error("Not authenticated");
 		}
-    try{
-      return await getPlayerByUserid(ctx, identity.tokenIdentifier);
-    } catch (e) {
-      return undefined;
-    }
+		try {
+			return await getPlayerByUserid(ctx, identity.tokenIdentifier);
+		} catch (e) {
+			return undefined;
+		}
 	},
 });
 
@@ -31,7 +33,11 @@ export const createPlayer = mutation({
 	args: {
 		username: v.string(),
 	},
-	handler: async (ctx, { username }) => {
+	returns: v.object({
+		existing: v.boolean(),
+		playerId: v.id("players"),
+	}),
+	handler: async (ctx: any, { username }: { username: string }) => {
 		const identity = await ctx.auth.getUserIdentity();
 		if (identity === null) {
 			throw new Error("Not authenticated");
@@ -39,7 +45,9 @@ export const createPlayer = mutation({
 
 		const existingPlayer = await ctx.db
 			.query("players")
-			.withIndex("by_userId", (q: any) => q.eq("userId", identity.tokenIdentifier))
+			.withIndex("by_userId", (q: any) =>
+				q.eq("userId", identity.tokenIdentifier),
+			)
 			.first();
 
 		if (existingPlayer) {

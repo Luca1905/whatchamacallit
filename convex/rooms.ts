@@ -5,7 +5,8 @@ import { getPlayerByUserid } from "./user";
 
 export const createRoom = mutation({
 	args: {},
-	handler: async (ctx) => {
+	returns: v.string(),
+	handler: async (ctx: any) => {
 		const identity = await ctx.auth.getUserIdentity();
 		if (identity === null) {
 			throw new Error("User not authenticated");
@@ -26,7 +27,8 @@ export const joinRoom = mutation({
 	args: {
 		roomCode: v.string(),
 	},
-	handler: async (ctx, { roomCode }) => {
+	returns: v.boolean(),
+	handler: async (ctx: any, { roomCode }: { roomCode: string }) => {
 		const userId = await getAuthUserId(ctx);
 		if (!userId) {
 			throw new Error("Client is not authenticated");
@@ -51,7 +53,8 @@ export const joinRoom = mutation({
 
 export const getRoom = query({
 	args: { roomCode: v.string() },
-	handler: async (ctx, { roomCode }) => {
+	returns: v.any(),
+	handler: async (ctx: any, { roomCode }: { roomCode: string }) => {
 		const room = await ctx.db
 			.query("rooms")
 			.withIndex("by_room_code", (q: any) => q.eq("roomCode", roomCode))
@@ -62,7 +65,8 @@ export const getRoom = query({
 
 export const listPlayersByRoom = query({
 	args: { roomCode: v.string() },
-	handler: async (ctx, { roomCode }) => {
+	returns: v.array(v.any()),
+	handler: async (ctx: any, { roomCode }: { roomCode: string }) => {
 		const room = await ctx.db
 			.query("rooms")
 			.withIndex("by_room_code", (q: any) => q.eq("roomCode", roomCode))

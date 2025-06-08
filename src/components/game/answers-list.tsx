@@ -24,7 +24,7 @@ export default function AnswersList() {
 
 	return (
 		<div className="grid gap-3">
-			{gameState.roundState.answers.map((answer, index) => (
+			{gameState.roundState.answers.map((answer: any, index: number) => (
 				<Button
 					key={answer.id}
 					variant={

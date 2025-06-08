@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import React from "react";
+import type React from "react";
 
 interface LoadingSpinnerProps extends React.HTMLAttributes<HTMLDivElement> {
 	size?: number;
@@ -17,7 +17,10 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 	<div
 		role="status"
 		aria-label="loading"
-		className={cn("animate-spin rounded-full border-2 border-muted-foreground border-t-transparent", className)}
+		className={cn(
+			"animate-spin rounded-full border-2 border-muted-foreground border-t-transparent",
+			className,
+		)}
 		style={{ width: size, height: size }}
 		{...props}
 	/>

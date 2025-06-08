@@ -1,6 +1,6 @@
-import React from "react";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle } from "lucide-react";
+import React from "react";
 
 interface ErrorBoundaryState {
 	hasError: boolean;
@@ -25,17 +25,17 @@ export class ErrorBoundary extends React.Component<
 		this.setState({ hasError: false, error: undefined });
 	};
 
-	override componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
+	componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
 		console.error("Uncaught error:", error, errorInfo);
 	}
 
-	override render() {
+	render() {
 		if (this.state.hasError) {
 			return (
 				<div className="flex min-h-48 flex-col items-center justify-center gap-4 rounded-md border border-red-300 bg-red-50 p-6 text-center">
 					<AlertTriangle className="h-8 w-8 text-red-600" />
 					<h2 className="font-semibold text-red-700">Something went wrong</h2>
-					<p className="text-sm text-red-600">
+					<p className="text-red-600 text-sm">
 						{this.state.error?.message ?? "Unknown error"}
 					</p>
 					<Button onClick={this.handleReset}>Try again</Button>
