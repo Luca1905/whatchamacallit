@@ -12,6 +12,8 @@ import {
 } from "react";
 import { avatarColors } from "@/lib/game-data";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 interface GameContextType {
 	gameState: GameState;
 	addPlayer: (name: string) => void;

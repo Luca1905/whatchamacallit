@@ -39,7 +39,7 @@ export const createPlayer = mutation({
 
 		const existingPlayer = await ctx.db
 			.query("players")
-			.withIndex("by_userId", (q) => q.eq("userId", identity.tokenIdentifier))
+			.withIndex("by_userId", (q: any) => q.eq("userId", identity.tokenIdentifier))
 			.first();
 
 		if (existingPlayer) {
@@ -76,7 +76,7 @@ export const createPlayer = mutation({
 export async function getPlayerByUserid(ctx: QueryCtx, userId: string) {
 	const player = await ctx.db
 		.query("players")
-		.withIndex("by_userId", (q) => q.eq("userId", userId))
+		.withIndex("by_userId", (q: any) => q.eq("userId", userId))
 		.first();
 	if (!player) {
 		throw new Error("User not a player");

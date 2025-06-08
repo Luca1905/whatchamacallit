@@ -1,5 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import {
+  mutation,
+  query,
+  type MutationCtx,
+  type QueryCtx,
+} from "./_generated/server";
 
 const prompts = [
   "The secret ingredient in my grandmother's famous recipe is whatchamacallit.",
@@ -15,10 +22,10 @@ const prompts = [
 ];
 
 // Helper to get room doc by roomCode
-async function getRoomByCode(ctx: any, roomCode: string) {
+async function getRoomByCode(ctx: QueryCtx | MutationCtx, roomCode: string) {
   const room = await ctx.db
     .query("rooms")
-    .withIndex("by_room_code", (q) => q.eq("roomCode", roomCode))
+    .withIndex("by_room_code", (q: any) => q.eq("roomCode", roomCode))
     .first();
   if (!room) {
     throw new Error("Room not found");
@@ -30,7 +37,10 @@ export const getGameState = query({
   args: { roomCode: v.string() },
   // Return type is any to avoid verbose nested validators
   returns: v.any(),
-  handler: async (ctx, { roomCode }) => {
+  handler: async (
+    ctx: QueryCtx,
+    { roomCode }: { roomCode: string },
+  ) => {
     const room = await getRoomByCode(ctx, roomCode);
 
     // Fetch players in the room
@@ -43,14 +53,14 @@ export const getGameState = query({
     // Get the active game for this room (should be 0 or 1)
     const game = await ctx.db
       .query("games")
-      .withIndex("by_room", (q) => q.eq("roomId", room._id))
+      .withIndex("by_room", (q: any) => q.eq("roomId", room._id))
       .first();
 
     let currentRoundAnswers: any[] = [];
     if (game) {
       currentRoundAnswers = await ctx.db
         .query("answers")
-        .withIndex("by_room_round", (q) =>
+        .withIndex("by_room_round", (q: any) =>
           q.eq("roomId", room._id).eq("round", game.currentRound),
         )
         .collect();
@@ -78,7 +88,10 @@ export const getGameState = query({
 export const startGame = mutation({
   args: { roomCode: v.string(), totalRounds: v.optional(v.number()) },
   returns: v.null(),
-  handler: async (ctx, { roomCode, totalRounds }) => {
+  handler: async (
+    ctx: MutationCtx,
+    { roomCode, totalRounds }: { roomCode: string; totalRounds?: number },
+  ) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       throw new Error("Not authenticated");
@@ -88,7 +101,7 @@ export const startGame = mutation({
     // Ensure caller is part of room
     const player = await ctx.db
       .query("players")
-      .withIndex("by_userId", (q) => q.eq("userId", identity.tokenIdentifier))
+      .withIndex("by_userId", (q: any) => q.eq("userId", identity.tokenIdentifier))
       .first();
     if (!player || !room.playerIds.includes(player._id)) {
       throw new Error("Player not in room");
@@ -111,7 +124,7 @@ export const startGame = mutation({
     // Remove old game if exists
     const existingGame = await ctx.db
       .query("games")
-      .withIndex("by_room", (q) => q.eq("roomId", room._id))
+      .withIndex("by_room", (q: any) => q.eq("roomId", room._id))
       .first();
     if (existingGame) {
       await ctx.db.delete(existingGame._id);
@@ -134,13 +147,16 @@ export const startGame = mutation({
 export const submitAnswer = mutation({
   args: { roomCode: v.string(), answer: v.string() },
   returns: v.null(),
-  handler: async (ctx, { roomCode, answer }) => {
+  handler: async (
+    ctx: MutationCtx,
+    { roomCode, answer }: { roomCode: string; answer: string },
+  ) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Not authenticated");
     const room = await getRoomByCode(ctx, roomCode);
     const player = await ctx.db
       .query("players")
-      .withIndex("by_userId", (q) => q.eq("userId", identity.tokenIdentifier))
+      .withIndex("by_userId", (q: any) => q.eq("userId", identity.tokenIdentifier))
       .first();
     if (!player || !room.playerIds.includes(player._id)) {
       throw new Error("Player not in room");
@@ -148,7 +164,7 @@ export const submitAnswer = mutation({
 
     const game = await ctx.db
       .query("games")
-      .withIndex("by_room", (q) => q.eq("roomId", room._id))
+      .withIndex("by_room", (q: any) => q.eq("roomId", room._id))
       .first();
     if (!game) throw new Error("Game not started");
     if (game.gamePhase !== "answering") {
@@ -158,10 +174,10 @@ export const submitAnswer = mutation({
     // Prevent duplicate answers by same player
     const existingAnswer = await ctx.db
       .query("answers")
-      .withIndex("by_room_round", (q) =>
+      .withIndex("by_room_round", (q: any) =>
         q.eq("roomId", room._id).eq("round", game.currentRound),
       )
-      .filter((q) => q.eq(q.field("playerId"), player._id))
+      .filter((q: any) => q.eq(q.field("playerId"), player._id))
       .first();
     if (existingAnswer) {
       await ctx.db.patch(existingAnswer._id, { answer });
@@ -178,7 +194,7 @@ export const submitAnswer = mutation({
     // Check if all players have submitted answers
     const answersForRound = await ctx.db
       .query("answers")
-      .withIndex("by_room_round", (q) =>
+      .withIndex("by_room_round", (q: any) =>
         q.eq("roomId", room._id).eq("round", game.currentRound),
       )
       .collect();
@@ -194,11 +210,17 @@ export const submitAnswer = mutation({
 export const selectAnswer = mutation({
   args: { roomCode: v.string(), selectedAnswer: v.string() },
   returns: v.null(),
-  handler: async (ctx, { roomCode, selectedAnswer }) => {
+  handler: async (
+    ctx: MutationCtx,
+    {
+      roomCode,
+      selectedAnswer,
+    }: { roomCode: string; selectedAnswer: string },
+  ) => {
     const room = await getRoomByCode(ctx, roomCode);
     const game = await ctx.db
       .query("games")
-      .withIndex("by_room", (q) => q.eq("roomId", room._id))
+      .withIndex("by_room", (q: any) => q.eq("roomId", room._id))
       .first();
     if (!game) throw new Error("Game not started");
     await ctx.db.patch(game._id, {
@@ -212,11 +234,14 @@ export const selectAnswer = mutation({
 export const nextRound = mutation({
   args: { roomCode: v.string() },
   returns: v.null(),
-  handler: async (ctx, { roomCode }) => {
+  handler: async (
+    ctx: MutationCtx,
+    { roomCode }: { roomCode: string },
+  ) => {
     const room = await getRoomByCode(ctx, roomCode);
     const game = await ctx.db
       .query("games")
-      .withIndex("by_room", (q) => q.eq("roomId", room._id))
+      .withIndex("by_room", (q: any) => q.eq("roomId", room._id))
       .first();
     if (!game) throw new Error("Game not started");
 

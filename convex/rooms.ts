@@ -33,7 +33,7 @@ export const joinRoom = mutation({
 		}
 		const room = await ctx.db
 			.query("rooms")
-			.withIndex("by_room_code", (q) => q.eq("roomCode", roomCode))
+			.withIndex("by_room_code", (q: any) => q.eq("roomCode", roomCode))
 			.first();
 		if (!room) {
 			throw new Error("Room not found");
@@ -54,7 +54,7 @@ export const getRoom = query({
 	handler: async (ctx, { roomCode }) => {
 		const room = await ctx.db
 			.query("rooms")
-			.withIndex("by_room_code", (q) => q.eq("roomCode", roomCode))
+			.withIndex("by_room_code", (q: any) => q.eq("roomCode", roomCode))
 			.first();
 		return room;
 	},
@@ -65,7 +65,7 @@ export const listPlayersByRoom = query({
 	handler: async (ctx, { roomCode }) => {
 		const room = await ctx.db
 			.query("rooms")
-			.withIndex("by_room_code", (q) => q.eq("roomCode", roomCode))
+			.withIndex("by_room_code", (q: any) => q.eq("roomCode", roomCode))
 			.first();
 		if (!room) {
 			throw new Error("Room not found");
