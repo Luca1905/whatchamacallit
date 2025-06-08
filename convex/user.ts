@@ -1,44 +1,55 @@
-import { getAuthUserId } from "@convex-dev/auth/server";
 import { v } from "convex/values";
-import { mutation, query, QueryCtx } from "./_generated/server";
-import { Id } from "./_generated/dataModel";
+import type { Id } from "./_generated/dataModel";
+import { type QueryCtx, mutation, query } from "./_generated/server";
 
 export const getUsername = query({
-  args: {},
-  handler: async (ctx) => {
-    const userId = await getAuthUserId(ctx);
-    if (userId === null) {
-      throw new Error("Client is not authenticated");
-    }
-    const user = await ctx.db.get(userId);
-    return user?.name;
-  },
+	args: {},
+	handler: async (ctx) => {
+		const identity = await ctx.auth.getUserIdentity();
+		if (identity === null) {
+			throw new Error("Not authenticated");
+		}
+		return identity?.name;
+	},
 });
 
-export const setUsername = mutation({
-  args: {
-    name: v.string(),
-  },
-  handler: async (ctx, { name }) => {
-    const userId = await getAuthUserId(ctx);
-    if (userId === null) {
-      throw new Error("Client is not authenticated");
-    }
-    await ctx.db.patch(userId, { name });
-    return true;
-  },
+export const createPlayer = mutation({
+	args: {
+		username: v.string(),
+	},
+	handler: async (ctx, { username }) => {
+		const identity = await ctx.auth.getUserIdentity();
+		if (identity === null) {
+			throw new Error("Not authenticated");
+		}
+
+		const existingPlayer = await ctx.db
+			.query("players")
+			.withIndex("by_userId", (q) => q.eq("userId", identity.tokenIdentifier))
+			.first();
+
+		if (existingPlayer) {
+			return existingPlayer._id;
+		}
+
+		const playerId = await ctx.db.insert("players", {
+			userId: identity.tokenIdentifier,
+			username,
+			score: 0,
+			isDoctor: false,
+		});
+
+		return playerId;
+	},
 });
 
-export async function getPlayerByUserid(
-  ctx: QueryCtx,
-  userId: Id<"users">,
-) {
-  const player = await ctx.db
-    .query("players")
-    .withIndex("by_userId", (q) => q.eq("userId", userId))
-    .first();
-  if (!player) {
-    throw new Error("User not a player");
-  }
-  return player;
+export async function getPlayerByUserid(ctx: QueryCtx, userId: string) {
+	const player = await ctx.db
+		.query("players")
+		.withIndex("by_userId", (q) => q.eq("userId", userId))
+		.first();
+	if (!player) {
+		throw new Error("User not a player");
+	}
+	return player;
 }

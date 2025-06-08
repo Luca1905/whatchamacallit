@@ -1,22 +1,17 @@
-import { authTables } from "@convex-dev/auth/server";
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
-// The schema is entirely optional.
-// You can delete this file (schema.ts) and the
-// app will continue to work.
-// The schema provides more precise TypeScript types.
 export default defineSchema({
 	players: defineTable({
-		userId: v.id("users"),
+		userId: v.string(),
+		username: v.string(),
 		score: v.number(),
 		isDoctor: v.boolean(),
 	}).index("by_userId", ["userId"]),
 
 	rooms: defineTable({
-		hostId: v.id("users"),
+		hostId: v.id("players"),
 		playerIds: v.array(v.id("players")),
-    roomCode: v.string(),
+		roomCode: v.string(),
 	}).index("by_room_code", ["roomCode"]),
-	...authTables,
 });

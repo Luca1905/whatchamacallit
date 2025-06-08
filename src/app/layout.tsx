@@ -3,8 +3,8 @@ import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 
-import { ConvexClientProvider } from "@/components/ConvexClientProvider";
-import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
+import ConvexClientProvider from "@/components/ConvexClientProvider";
+import { ClerkProvider } from "@clerk/nextjs";
 
 export const metadata: Metadata = {
 	title: "Create T3 App",
@@ -21,12 +21,19 @@ export default function RootLayout({
 	children,
 }: Readonly<{ children: React.ReactNode }>) {
 	return (
-		<ConvexAuthNextjsServerProvider>
-			<html lang="en" className={`${geist.variable}`}>
-				<body>
-					<ConvexClientProvider>{children}</ConvexClientProvider>
-				</body>
-			</html>
-		</ConvexAuthNextjsServerProvider>
+		<html lang="en" className={`${geist.variable} antialiased`}>
+			<body>
+				<ClerkProvider>
+					<ConvexClientProvider>
+						<main className="scanlines">
+							<div className="screen">
+								<canvas id="canvas" className="picture -z-10 relative" />
+								<div className="overlay">{children}</div>
+							</div>
+						</main>
+					</ConvexClientProvider>
+				</ClerkProvider>
+			</body>
+		</html>
 	);
 }
