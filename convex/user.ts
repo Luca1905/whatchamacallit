@@ -15,7 +15,7 @@ export const getUsername = query({
 
 export const getPlayer = query({
 	args: {},
-	returns: v.optional(v.any()),
+	returns: v.union(v.any(), v.null()),
 	handler: async (ctx: any) => {
 		const identity = await ctx.auth.getUserIdentity();
 		if (identity === null) {
@@ -24,7 +24,7 @@ export const getPlayer = query({
 		try {
 			return await getPlayerByUserid(ctx, identity.tokenIdentifier);
 		} catch (e) {
-			return undefined;
+			return null;
 		}
 	},
 });

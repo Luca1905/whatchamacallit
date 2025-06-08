@@ -36,7 +36,8 @@
 		"**/*.ts",
 		"**/*.tsx",
 		".next/types/**/*.ts",
-		"types/**/*.d.ts"
+		"types/**/*.d.ts",
+		"convex/**/*.ts"
 	],
-	"exclude": ["node_modules"]
+	"exclude": ["node_modules", "convex/_generated"]
 }
