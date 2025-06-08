@@ -25,6 +25,7 @@ interface GameContextType {
 	nextRound: () => void;
 	resetGame: () => void;
 	roomCode: string | null;
+	isReady: boolean;
 	createRoom: () => void;
 	joinRoom: (roomCode: string) => Promise<void>;
 }
@@ -61,6 +62,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
 	const nextRoundMutation = useMutation(api.game.nextRound);
 
 	// Derived gameState for UI
+	const isReady = backendState !== undefined;
+
 	const gameState: GameState = useMemo(() => {
 		if (!backendState) return initialState;
 
@@ -173,6 +176,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
 				nextRound,
 				resetGame,
 				roomCode,
+				isReady,
 				createRoom: handleCreateRoom,
 				joinRoom: handleJoinRoom,
 			}}

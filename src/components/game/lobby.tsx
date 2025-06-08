@@ -7,10 +7,19 @@ import { Separator } from "@/components/ui/separator";
 import { useGameContext } from "@/context/game-context";
 import { ArrowLeft, Play, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 export default function Lobby() {
 	const router = useRouter();
-	const { gameState, startGame, roomCode } = useGameContext();
+	const { gameState, startGame, roomCode, isReady } = useGameContext();
+
+	if (!isReady) {
+		return (
+			<div className="flex min-h-screen items-center justify-center bg-blue-50">
+				<LoadingSpinner size={48} className="text-blue-600" />
+			</div>
+		);
+	}
 
 	const handleStartGame = () => {
 		startGame();
@@ -35,7 +44,7 @@ export default function Lobby() {
 						<p className="text-muted-foreground">
 							Add players and configure your game
 						</p>
-            Code: {roomCode}
+						Code: {roomCode}
 					</div>
 				</div>
 
