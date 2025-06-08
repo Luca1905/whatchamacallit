@@ -2,6 +2,13 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import {
+	SignInButton,
+	SignedIn,
+	SignedOut,
+	UserButton,
+	UserProfile,
+} from "@clerk/nextjs";
 import { Gamepad2, Play, Settings, Trophy, Users } from "lucide-react";
 
 interface MenuScreenProps {

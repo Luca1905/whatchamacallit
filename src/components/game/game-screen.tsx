@@ -11,13 +11,11 @@ import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { useGameContext } from "@/context/game-context";
 import { Crown, Send, Shuffle, Star } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-interface GameScreenProps {
-	onNavigate: (screen: "menu" | "setup" | "play" | "results") => void;
-}
-
-export default function GameScreen({ onNavigate }: GameScreenProps) {
+export default function GameScreen() {
+	const router = useRouter();
 	const { gameState, submitAnswer, revealAnswers, nextRound } =
 		useGameContext();
 	const [playerAnswer, setPlayerAnswer] = useState("");
@@ -32,7 +30,7 @@ export default function GameScreen({ onNavigate }: GameScreenProps) {
 	const handleNextRound = () => {
 		nextRound();
 		if (gameState.roundState.currentRound >= gameState.roundState.totalRounds) {
-			onNavigate("results");
+			router.push("/game/results");
 		}
 	};
 
@@ -79,7 +77,7 @@ export default function GameScreen({ onNavigate }: GameScreenProps) {
 									value={playerAnswer}
 									onChange={(e) => setPlayerAnswer(e.target.value)}
 									className="p-4 text-lg"
-									onKeyPress={(e) => e.key === "Enter" && handleSubmitAnswer()}
+									onKeyDown={(e) => e.key === "Enter" && handleSubmitAnswer()}
 								/>
 								<Button
 									onClick={handleSubmitAnswer}

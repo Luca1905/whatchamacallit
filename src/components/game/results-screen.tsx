@@ -6,17 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useGameContext } from "@/context/game-context";
 import { Crown, Trophy } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-interface ResultsScreenProps {
-	onNavigate: (screen: "menu" | "setup" | "play" | "results") => void;
-}
-
-export default function ResultsScreen({ onNavigate }: ResultsScreenProps) {
+export default function ResultsScreen() {
+	const router = useRouter();
 	const { gameState, resetGame } = useGameContext();
 
 	const handlePlayAgain = () => {
 		resetGame();
-		onNavigate("setup");
+		router.push("/game/lobby");
 	};
 
 	return (
@@ -76,7 +74,7 @@ export default function ResultsScreen({ onNavigate }: ResultsScreenProps) {
 						Play Again
 					</Button>
 					<Button
-						onClick={() => onNavigate("menu")}
+						onClick={() => router.push("/game/lobby")}
 						size="lg"
 						className="bg-purple-500 hover:bg-purple-600"
 					>

@@ -1,5 +1,4 @@
 import { v } from "convex/values";
-import type { Id } from "./_generated/dataModel";
 import { type QueryCtx, mutation, query } from "./_generated/server";
 
 export const getUsername = query({
@@ -9,7 +8,22 @@ export const getUsername = query({
 		if (identity === null) {
 			throw new Error("Not authenticated");
 		}
-		return identity?.name;
+		return (await getPlayerByUserid(ctx, identity.tokenIdentifier)).username;
+	},
+});
+
+export const getPlayer = query({
+	args: {},
+	handler: async (ctx) => {
+		const identity = await ctx.auth.getUserIdentity();
+		if (identity === null) {
+			throw new Error("Not authenticated");
+		}
+    try{
+      return await getPlayerByUserid(ctx, identity.tokenIdentifier);
+    } catch (e) {
+      return undefined;
+    }
 	},
 });
 
@@ -29,7 +43,7 @@ export const createPlayer = mutation({
 			.first();
 
 		if (existingPlayer) {
-			return existingPlayer._id;
+			return { existing: true, playerId: existingPlayer._id };
 		}
 
 		const playerId = await ctx.db.insert("players", {
@@ -39,7 +53,7 @@ export const createPlayer = mutation({
 			isDoctor: false,
 		});
 
-		return playerId;
+		return { existing: false, playerId: playerId };
 	},
 });
 
