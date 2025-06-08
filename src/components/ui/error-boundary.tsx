@@ -10,7 +10,10 @@ interface ErrorBoundaryState {
 	error?: Error;
 }
 
-export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export class ErrorBoundary extends React.Component<
+	ErrorBoundaryProps,
+	ErrorBoundaryState
+> {
 	refs: any = {};
 
 	constructor(props: any) {
@@ -34,19 +37,26 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
 		if (this.state.hasError) {
 			if (this.props.fallback) {
 				const FallbackComponent = this.props.fallback;
-				return <FallbackComponent error={this.state.error!} resetError={this.resetError} />;
+				return (
+					<FallbackComponent
+						error={this.state.error!}
+						resetError={this.resetError}
+					/>
+				);
 			}
 
 			return (
 				<div className="flex min-h-[200px] items-center justify-center rounded-lg border border-destructive/20 bg-destructive/5 p-6">
 					<div className="text-center">
-						<h2 className="mb-2 text-lg font-semibold text-destructive">Something went wrong</h2>
-						<p className="mb-4 text-sm text-muted-foreground">
+						<h2 className="mb-2 font-semibold text-destructive text-lg">
+							Something went wrong
+						</h2>
+						<p className="mb-4 text-muted-foreground text-sm">
 							{this.state.error?.message || "An unexpected error occurred"}
 						</p>
 						<button
 							onClick={this.resetError}
-							className="rounded bg-primary px-4 py-2 text-sm text-primary-foreground hover:bg-primary/90"
+							className="rounded bg-primary px-4 py-2 text-primary-foreground text-sm hover:bg-primary/90"
 						>
 							Try again
 						</button>

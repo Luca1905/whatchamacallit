@@ -232,15 +232,15 @@ export const selectAnswer = mutation({
 
 		// Find the doctor's answer
 		const doctorAnswer = roundAnswers.find((answer: any) => answer.isDoctor);
-		
+
 		// If the selected answer matches the doctor's answer, award points to all players
 		if (doctorAnswer && selectedAnswer === doctorAnswer.answer) {
 			// Award 10 points to all players for finding the doctor's answer
 			for (const playerId of room.playerIds) {
 				const player = await ctx.db.get(playerId);
 				if (player) {
-					await ctx.db.patch(playerId, { 
-						score: player.score + 10 
+					await ctx.db.patch(playerId, {
+						score: player.score + 10,
 					});
 				}
 			}
@@ -249,8 +249,8 @@ export const selectAnswer = mutation({
 		if (doctorAnswer) {
 			const doctorPlayer = await ctx.db.get(doctorAnswer.playerId);
 			if (doctorPlayer) {
-				await ctx.db.patch(doctorAnswer.playerId, { 
-					score: doctorPlayer.score + 5 
+				await ctx.db.patch(doctorAnswer.playerId, {
+					score: doctorPlayer.score + 5,
 				});
 			}
 		}

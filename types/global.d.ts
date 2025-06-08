@@ -169,12 +169,12 @@ declare module "class-variance-authority" {
 }
 
 declare module "@radix-ui/react-slot" {
-	import * as React from "react";
+	import type * as React from "react";
 	export const Slot: React.FC<any>;
 }
 
 declare module "@radix-ui/react-avatar" {
-	import * as React from "react";
+	import type * as React from "react";
 	export const Root: React.FC<any>;
 	export const Image: React.FC<any>;
 	export const Fallback: React.FC<any>;
@@ -184,7 +184,7 @@ declare module "@radix-ui/react-avatar" {
 }
 
 declare module "@radix-ui/react-progress" {
-	import * as React from "react";
+	import type * as React from "react";
 	export const Root: React.FC<any>;
 	export const Indicator: React.FC<any>;
 	export type ProgressProps = any;
@@ -192,7 +192,7 @@ declare module "@radix-ui/react-progress" {
 }
 
 declare module "@radix-ui/react-separator" {
-	import * as React from "react";
+	import type * as React from "react";
 	export const Root: React.FC<any>;
 	export type SeparatorProps = any;
 }

@@ -49,7 +49,9 @@ export default function ResultsScreen() {
 											>
 												#{index + 1}
 											</Badge>
-											<div className={`h-10 w-10 rounded-full flex items-center justify-center text-white font-bold ${player.avatar}`}>
+											<div
+												className={`flex h-10 w-10 items-center justify-center rounded-full font-bold text-white ${player.avatar}`}
+											>
 												{player.name.charAt(0).toUpperCase()}
 											</div>
 											<span className="font-semibold text-lg">
@@ -70,10 +72,7 @@ export default function ResultsScreen() {
 					<Button onClick={handlePlayAgain} size="lg" variant="outline">
 						Play Again
 					</Button>
-					<Button
-						onClick={() => router.push("/game/lobby")}
-						size="lg"
-					>
+					<Button onClick={() => router.push("/game/lobby")} size="lg">
 						Back to Menu
 					</Button>
 				</div>

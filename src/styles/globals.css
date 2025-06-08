@@ -347,7 +347,7 @@ body {
 	.scanlines::before {
 		background-size: 100% 3px;
 	}
-	
+
 	.scanlines::after {
 		background-size: 2px 100%;
 	}
@@ -357,7 +357,7 @@ body {
 	.scanlines::before {
 		background-size: 100% 2px;
 	}
-	
+
 	.scanlines::after {
 		background-size: 1px 100%;
 	}

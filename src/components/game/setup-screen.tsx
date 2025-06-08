@@ -42,11 +42,7 @@ export default function SetupScreen() {
 			<div className="mx-auto max-w-md text-center">
 				<h2 className="font-bold text-4xl text-primary">Multiplayer Lobby</h2>
 				<div className="mt-8 space-y-4">
-					<Button
-						onClick={createRoom}
-						size="lg"
-						className="w-full"
-					>
+					<Button onClick={createRoom} size="lg" className="w-full">
 						Create Room
 					</Button>
 					<div className="relative">

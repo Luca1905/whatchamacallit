@@ -77,7 +77,9 @@ export default function GameScreen() {
 									value={playerAnswer}
 									onChange={(e: any) => setPlayerAnswer(e.target.value)}
 									className="p-4 text-lg"
-									onKeyDown={(e: any) => e.key === "Enter" && handleSubmitAnswer()}
+									onKeyDown={(e: any) =>
+										e.key === "Enter" && handleSubmitAnswer()
+									}
 								/>
 								<Button
 									onClick={handleSubmitAnswer}
@@ -127,45 +129,43 @@ export default function GameScreen() {
 				{gameState.gamePhase === "revealing" && (
 					<Card className="border-0 bg-card/80 shadow-xl backdrop-blur-sm">
 						<CardHeader>
-							<CardTitle className="text-center">
-								Round Results!
-							</CardTitle>
+							<CardTitle className="text-center">Round Results!</CardTitle>
 						</CardHeader>
 						<CardContent className="space-y-6">
 							<div className="grid gap-4">
-								{gameState.roundState.answers.map((answer: any, index: number) => (
-									<div
-										key={answer.id}
-										className={`rounded-lg border-2 p-4 ${
-											answer.isDoctor
-												? "border-yellow-400 bg-yellow-50 dark:border-yellow-500 dark:bg-yellow-950"
-												: "border-border bg-muted"
-										}`}
-									>
-										<div className="flex flex-col justify-between gap-2 md:flex-row md:items-center">
-											<div className="flex items-center gap-3">
-												<Badge
-													variant={answer.isDoctor ? "default" : "secondary"}
-												>
-													{String.fromCharCode(65 + index)}
-												</Badge>
-												<span className="font-medium">
-													{answer.answer}
-												</span>
-											</div>
-											<div className="flex items-center gap-2">
-												{answer.isDoctor && (
-													<Crown className="h-4 w-4 text-yellow-500" />
-												)}
-												<span className="text-muted-foreground text-sm">
-													{answer.isDoctor
-														? "Dr. Whatchamacallit"
-														: answer.playerName}
-												</span>
+								{gameState.roundState.answers.map(
+									(answer: any, index: number) => (
+										<div
+											key={answer.id}
+											className={`rounded-lg border-2 p-4 ${
+												answer.isDoctor
+													? "border-yellow-400 bg-yellow-50 dark:border-yellow-500 dark:bg-yellow-950"
+													: "border-border bg-muted"
+											}`}
+										>
+											<div className="flex flex-col justify-between gap-2 md:flex-row md:items-center">
+												<div className="flex items-center gap-3">
+													<Badge
+														variant={answer.isDoctor ? "default" : "secondary"}
+													>
+														{String.fromCharCode(65 + index)}
+													</Badge>
+													<span className="font-medium">{answer.answer}</span>
+												</div>
+												<div className="flex items-center gap-2">
+													{answer.isDoctor && (
+														<Crown className="h-4 w-4 text-yellow-500" />
+													)}
+													<span className="text-muted-foreground text-sm">
+														{answer.isDoctor
+															? "Dr. Whatchamacallit"
+															: answer.playerName}
+													</span>
+												</div>
 											</div>
 										</div>
-									</div>
-								))}
+									),
+								)}
 							</div>
 
 							<Separator />
@@ -173,7 +173,8 @@ export default function GameScreen() {
 							<div className="text-center">
 								<p className="mb-4 text-lg">
 									{gameState.roundState.selectedAnswer ===
-									gameState.roundState.answers.find((a: any) => a.isDoctor)?.answer
+									gameState.roundState.answers.find((a: any) => a.isDoctor)
+										?.answer
 										? "🎉 Correct! You found Dr. Whatchamacallit's answer!"
 										: "❌ Wrong guess! Better luck next round!"}
 								</p>

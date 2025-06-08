@@ -11,7 +11,9 @@ interface LoadingSpinnerProps {
  * Minimal animated spinner used as a loading indicator. Accepts Tailwind
  * utility classes via `className` and custom size via `size` prop.
  */
-export const LoadingSpinner: React.FC<LoadingSpinnerProps> = (props: LoadingSpinnerProps) => {
+export const LoadingSpinner: React.FC<LoadingSpinnerProps> = (
+	props: LoadingSpinnerProps,
+) => {
 	const { className, size = 16, ...rest } = props;
 	return (
 		<div
