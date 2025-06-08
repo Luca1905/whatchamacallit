@@ -221,6 +221,40 @@ export const selectAnswer = mutation({
 			.withIndex("by_room", (q: any) => q.eq("roomId", room._id))
 			.first();
 		if (!game) throw new Error("Game not started");
+
+		// Get all answers for current round to check if guess is correct
+		const roundAnswers = await ctx.db
+			.query("answers")
+			.withIndex("by_room_round", (q: any) =>
+				q.eq("roomId", room._id).eq("round", game.currentRound),
+			)
+			.collect();
+
+		// Find the doctor's answer
+		const doctorAnswer = roundAnswers.find((answer: any) => answer.isDoctor);
+		
+		// If the selected answer matches the doctor's answer, award points to all players
+		if (doctorAnswer && selectedAnswer === doctorAnswer.answer) {
+			// Award 10 points to all players for finding the doctor's answer
+			for (const playerId of room.playerIds) {
+				const player = await ctx.db.get(playerId);
+				if (player) {
+					await ctx.db.patch(playerId, { 
+						score: player.score + 10 
+					});
+				}
+			}
+		}
+		// Award 5 points to the doctor for creating a convincing answer
+		if (doctorAnswer) {
+			const doctorPlayer = await ctx.db.get(doctorAnswer.playerId);
+			if (doctorPlayer) {
+				await ctx.db.patch(doctorAnswer.playerId, { 
+					score: doctorPlayer.score + 5 
+				});
+			}
+		}
+
 		await ctx.db.patch(game._id, {
 			selectedAnswer,
 			gamePhase: "revealing",
