@@ -1,11 +1,15 @@
 "use client";
 
 import AnswersList from "@/components/game/answers-list";
+import AnswerVisualization from "@/components/game/answer-visualization";
 import ConnectionStatus from "@/components/game/connection-status";
 import EnhancedAnswerInput from "@/components/game/enhanced-answer-input";
+import GameAnalyticsDashboard from "@/components/game/game-analytics-dashboard";
 import GamePhaseTransition from "@/components/game/game-phase-transition";
 import GameStatusDisplay from "@/components/game/game-status-display";
+import LiveGameFeed from "@/components/game/live-game-feed";
 import LoadingState from "@/components/game/loading-state";
+import PlayerDashboard from "@/components/game/player-dashboard";
 import PlayerScoreCards from "@/components/game/player-score-cards";
 import PromptCard from "@/components/game/prompt-card";
 import RealTimeScoreboard from "@/components/game/real-time-scoreboard";
@@ -106,10 +110,8 @@ export default function EnhancedGameScreen() {
             {/* Game Phase Content */}
             {gameState.gamePhase === "answering" && <EnhancedAnswerInput />}
 
-            {/* Basic answers list for now */}
-            {(gameState.gamePhase === "guessing" || gameState.gamePhase === "revealing") && (
-              <AnswersList />
-            )}
+            {/* Enhanced answer visualization for guessing and revealing phases */}
+            <AnswerVisualization />
 
             {/* Next round button for revealing phase */}
             {gameState.gamePhase === "revealing" && (
@@ -132,7 +134,9 @@ export default function EnhancedGameScreen() {
           {/* Sidebar with real-time info */}
           <div className="lg:col-span-1 space-y-4 max-h-screen overflow-y-auto">
             <RealTimeScoreboard />
-            <GameStatusDisplay />
+            <PlayerDashboard />
+            <LiveGameFeed />
+            <GameAnalyticsDashboard />
           </div>
         </div>
 
