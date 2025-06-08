@@ -29,7 +29,7 @@ type BadgeProps = React.ComponentPropsWithoutRef<"span"> &
 	VariantProps<typeof badgeVariants> & { asChild?: boolean };
 
 const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
-	({ className, variant, asChild = false, ...props }, ref) => {
+	({ className, variant, asChild = false, ...props }: BadgeProps, ref: React.Ref<HTMLSpanElement>) => {
 		const Comp = asChild ? Slot : "span";
 
 		return (
