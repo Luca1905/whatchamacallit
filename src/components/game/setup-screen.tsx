@@ -21,7 +21,7 @@ export default function SetupScreen() {
 		}
 	}, [roomCode, router]);
 
-	if (isAuthLoading) {
+	if (isAuthLoading || player === undefined) {
 		return (
 			<div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-50 p-6">
 				<div className="text-center">
@@ -32,9 +32,8 @@ export default function SetupScreen() {
 		);
 	}
 
-	if (!isAuthenticated || player === undefined) {
-		console.log("Auth state:", { isAuthenticated, player });
-		return redirect("/game/setup/username");
+	if (!isAuthenticated || player === null) {
+		redirect("/game/setup/username");
 	}
 
 	return (

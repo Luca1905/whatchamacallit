@@ -29,9 +29,9 @@ export const joinRoom = mutation({
 	},
 	returns: v.boolean(),
 	handler: async (ctx: any, { roomCode }: { roomCode: string }) => {
-		const userId = await getAuthUserId(ctx);
-		if (!userId) {
-			throw new Error("Client is not authenticated");
+		const identity = await ctx.auth.getUserIdentity();
+		if (identity === null) {
+			throw new Error("User not authenticated");
 		}
 		const room = await ctx.db
 			.query("rooms")
@@ -40,7 +40,7 @@ export const joinRoom = mutation({
 		if (!room) {
 			throw new Error("Room not found");
 		}
-		const player = await getPlayerByUserid(ctx, userId);
+		const player = await getPlayerByUserid(ctx, identity.tokenIdentifier);
 
 		if (!room.playerIds.includes(player._id)) {
 			await ctx.db.patch(room._id, {

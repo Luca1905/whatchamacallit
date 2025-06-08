@@ -12,8 +12,6 @@ import {
 	useState,
 } from "react";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 interface GameContextType {
 	gameState: GameState;
 	addPlayer: (name: string) => void;
@@ -47,22 +45,14 @@ const initialState: GameState = {
 export function GameProvider({ children }: { children: ReactNode }) {
 	const [roomCode, setRoomCode] = useState(null);
 	const [selectedAnswer, setSelectedAnswer] = useState(null);
-
-	// Cast to any to accommodate possible lag in Convex codegen during development
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const apiAny: any = api;
-
-	const backendState = useQuery(
-		roomCode ? apiAny.game.getGameState : undefined,
-		roomCode ? { roomCode } : undefined,
-	);
-
+	const backendState = useQuery(api.game.getGameState, roomCode ? { roomCode } : "skip");
+  
 	const createRoom = useMutation(api.rooms.createRoom);
 	const joinRoomMutation = useMutation(api.rooms.joinRoom);
-	const startGameMutation = useMutation(apiAny.game.startGame);
-	const submitAnswerMutation = useMutation(apiAny.game.submitAnswer);
-	const selectAnswerMutation = useMutation(apiAny.game.selectAnswer);
-	const nextRoundMutation = useMutation(apiAny.game.nextRound);
+	const startGameMutation = useMutation(api.game.startGame);
+	const submitAnswerMutation = useMutation(api.game.submitAnswer);
+	const selectAnswerMutation = useMutation(api.game.selectAnswer);
+	const nextRoundMutation = useMutation(api.game.nextRound);
 
 	// Derived gameState for UI
 	const isReady = backendState !== undefined;
