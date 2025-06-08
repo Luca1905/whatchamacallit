@@ -1,11 +1,15 @@
 "use client";
 
 import AnswersList from "@/components/game/answers-list";
+import AnswerVisualization from "@/components/game/answer-visualization";
 import ConnectionStatus from "@/components/game/connection-status";
 import EnhancedAnswerInput from "@/components/game/enhanced-answer-input";
+import GameAnalyticsDashboard from "@/components/game/game-analytics-dashboard";
 import GamePhaseTransition from "@/components/game/game-phase-transition";
 import GameStatusDisplay from "@/components/game/game-status-display";
+import LiveGameFeed from "@/components/game/live-game-feed";
 import LoadingState from "@/components/game/loading-state";
+import PlayerDashboard from "@/components/game/player-dashboard";
 import PlayerScoreCards from "@/components/game/player-score-cards";
 import PromptCard from "@/components/game/prompt-card";
 import RealTimeScoreboard from "@/components/game/real-time-scoreboard";
@@ -106,184 +110,33 @@ export default function EnhancedGameScreen() {
             {/* Game Phase Content */}
             {gameState.gamePhase === "answering" && <EnhancedAnswerInput />}
 
-            {gameState.gamePhase === "guessing" && (
-              <Card className="border-0 shadow-xl">
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Crown className="h-5 w-5" />
-                      Which answer is from Dr. Whatchamacallit?
-                    </div>
-                    
-                    <Badge 
-                      variant={selectedAnswer ? "default" : "secondary"}
-                      className="text-sm"
-                    >
-                      {selectedAnswer ? "Answer Selected" : "Select an Answer"}
-                    </Badge>
-                  </CardTitle>
-                </CardHeader>
-                
-                <CardContent className="space-y-4">
-                  {/* Enhanced answers list with selection */}
-                  <div className="grid gap-3">
-                    {gameState.roundState.answers.map((answer: Answer, index: number) => (
-                      <button
-                        key={answer.id}
-                        onClick={() => handleAnswerSelect(answer.answer)}
-                        className={`text-left rounded-lg border-2 p-4 transition-all hover:shadow-md ${
-                          selectedAnswer === answer.answer
-                            ? "border-blue-500 bg-blue-50"
-                            : "border-gray-200 bg-white hover:border-gray-300"
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <Badge
-                              variant={
-                                selectedAnswer === answer.answer ? "default" : "secondary"
-                              }
-                            >
-                              {String.fromCharCode(65 + index)}
-                            </Badge>
-                            <span className="font-medium">{answer.answer}</span>
-                          </div>
-                          
-                          {selectedAnswer === answer.answer && (
-                            <div className="h-5 w-5 rounded-full bg-blue-500 flex items-center justify-center">
-                              <div className="h-2 w-2 rounded-full bg-white" />
-                            </div>
-                          )}
-                        </div>
-                      </button>
-                    ))}
-                  </div>
+            {/* Enhanced answer visualization for guessing and revealing phases */}
+            <AnswerVisualization />
 
-                  <Separator />
-
-                  <div className="flex justify-center">
-                    <Button
-                      onClick={handleRevealAnswers}
-                      disabled={!selectedAnswer || isRevealing}
-                      size="lg"
-                      className="bg-blue-500 px-8 hover:bg-blue-600 disabled:opacity-50"
-                    >
-                      {isRevealing ? (
-                        <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                      ) : (
-                        <Trophy className="mr-2 h-5 w-5" />
-                      )}
-                      {isRevealing ? "Revealing..." : "Reveal Answers"}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
+            {/* Next round button for revealing phase */}
             {gameState.gamePhase === "revealing" && (
-              <Card className="border-0 shadow-xl">
-                <CardHeader>
-                  <CardTitle className="text-center flex items-center justify-center gap-2">
-                    <Trophy className="h-6 w-6" />
-                    Round Results!
-                  </CardTitle>
-                </CardHeader>
-                
-                <CardContent className="space-y-6">
-                  {/* Celebration message */}
-                  {showCelebration && (
-                    <div className={`text-center p-6 rounded-lg ${
-                      isCorrectGuess() 
-                        ? "bg-green-50 border border-green-200" 
-                        : "bg-orange-50 border border-orange-200"
-                    }`}>
-                      <div className="text-4xl mb-2">
-                        {isCorrectGuess() ? "🎉" : "😅"}
-                      </div>
-                      <h3 className={`text-xl font-bold ${
-                        isCorrectGuess() ? "text-green-700" : "text-orange-700"
-                      }`}>
-                        {isCorrectGuess() 
-                          ? "Excellent Detective Work!" 
-                          : "Better Luck Next Round!"
-                        }
-                      </h3>
-                    </div>
-                  )}
-
-                  {/* Results grid */}
-                  <div className="grid gap-4">
-                    {gameState.roundState.answers.map((answer: Answer, index: number) => (
-                      <div
-                        key={answer.id}
-                        className={`rounded-lg border-2 p-4 ${
-                          answer.isDoctor
-                            ? "border-yellow-400 bg-yellow-50"
-                            : selectedAnswer === answer.answer
-                            ? "border-blue-400 bg-blue-50"
-                            : "border-gray-200 bg-gray-50"
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <Badge
-                              variant={answer.isDoctor ? "default" : "secondary"}
-                            >
-                              {String.fromCharCode(65 + index)}
-                            </Badge>
-                            <span className="font-medium">{answer.answer}</span>
-                          </div>
-                          
-                          <div className="flex items-center gap-2">
-                            {answer.isDoctor && (
-                              <Crown className="h-4 w-4 text-yellow-600" />
-                            )}
-                            {selectedAnswer === answer.answer && !answer.isDoctor && (
-                              <Badge variant="outline" className="text-xs">
-                                Your Guess
-                              </Badge>
-                            )}
-                            <span className="text-muted-foreground text-sm">
-                              {answer.isDoctor
-                                ? "Dr. Whatchamacallit"
-                                : answer.playerName}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <Separator />
-
-                  <div className="text-center space-y-4">
-                    <p className="text-lg">
-                      {isCorrectGuess()
-                        ? "🎉 Correct! You found Dr. Whatchamacallit's answer!"
-                        : "❌ Wrong guess! Better luck next round!"}
-                    </p>
-                    
-                    <Button
-                      onClick={handleNextRound}
-                      size="lg"
-                      className="bg-green-500 px-8 hover:bg-green-600"
-                    >
-                      {gameState.roundState.currentRound >=
-                      gameState.roundState.totalRounds
-                        ? "View Final Results"
-                        : "Next Round"}
-                      <Shuffle className="ml-2 h-5 w-5" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+              <div className="flex justify-center pt-6">
+                <Button
+                  onClick={handleNextRound}
+                  size="lg"
+                  className="bg-green-500 px-8 hover:bg-green-600"
+                >
+                  {gameState.roundState.currentRound >=
+                  gameState.roundState.totalRounds
+                    ? "View Final Results"
+                    : "Next Round"}
+                  <Shuffle className="ml-2 h-5 w-5" />
+                </Button>
+              </div>
             )}
           </div>
 
           {/* Sidebar with real-time info */}
-          <div className="lg:col-span-1 space-y-4">
+          <div className="lg:col-span-1 space-y-4 max-h-screen overflow-y-auto">
             <RealTimeScoreboard />
-            <GameStatusDisplay />
+            <PlayerDashboard />
+            <LiveGameFeed />
+            <GameAnalyticsDashboard />
           </div>
         </div>
 
