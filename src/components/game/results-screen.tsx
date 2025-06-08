@@ -1,6 +1,5 @@
 "use client";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -50,11 +49,9 @@ export default function ResultsScreen() {
 											>
 												#{index + 1}
 											</Badge>
-											<Avatar className={`${player.avatar} text-white`}>
-												<AvatarFallback className="bg-inherit">
-													{player.name.charAt(0).toUpperCase()}
-												</AvatarFallback>
-											</Avatar>
+											<div className={`h-10 w-10 rounded-full flex items-center justify-center text-white font-bold ${player.avatar}`}>
+												{player.name.charAt(0).toUpperCase()}
+											</div>
 											<span className="font-semibold text-lg">
 												{player.name}
 											</span>

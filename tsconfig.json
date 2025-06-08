@@ -1,47 +1,69 @@
 {
-	"compilerOptions": {
-		/* Base Options: */
-		"esModuleInterop": true,
-		"skipLibCheck": true,
-		"target": "es2022",
-		"allowJs": true,
-		"resolveJsonModule": true,
-		"moduleDetection": "force",
-		"isolatedModules": true,
-		"verbatimModuleSyntax": true,
-
-		/* Strictness */
-		"strict": true,
-		"noUncheckedIndexedAccess": true,
-		"checkJs": true,
-
-		/* Bundled projects */
-		"lib": ["dom", "dom.iterable", "ES2022"],
-		"noEmit": true,
-		"module": "ESNext",
-		"moduleResolution": "Bundler",
-		"jsx": "react-jsx",
-		"plugins": [{ "name": "next" }],
-		"types": ["node", "react", "react-dom"],
-		"incremental": true,
-
-		/* Path Aliases */
-		"baseUrl": ".",
-		"paths": {
-			"@/*": ["./src/*"],
-			"convex/*": ["./convex/*"],
-			"convex/server": ["./node_modules/convex/server"],
-			"convex/values": ["./node_modules/convex/values"],
-			"convex/react": ["./node_modules/convex/react"]
-		}
-	},
-	"include": [
-		"next-env.d.ts",
-		"**/*.ts",
-		"**/*.tsx",
-		".next/types/**/*.ts",
-		"types/**/*.d.ts",
-		"convex/**/*.ts"
-	],
-	"exclude": ["node_modules", "convex/_generated"]
+  "compilerOptions": {
+    /* Base Options: */
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "es2022",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    /* Strictness */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "checkJs": true,
+    /* Bundled projects */
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "ES2022"
+    ],
+    "noEmit": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "types": [
+      "node",
+      "react",
+      "react-dom"
+    ],
+    "incremental": true,
+    /* Path Aliases */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "convex/*": [
+        "./convex/*"
+      ],
+      "convex/server": [
+        "./node_modules/convex/server"
+      ],
+      "convex/values": [
+        "./node_modules/convex/values"
+      ],
+      "convex/react": [
+        "./node_modules/convex/react"
+      ]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "types/**/*.d.ts",
+    "convex/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "convex/_generated"
+  ]
 }
