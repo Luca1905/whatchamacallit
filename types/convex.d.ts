@@ -12,12 +12,27 @@ declare module "convex/server" {
 }
 
 declare module "convex/values" {
+  // Core validator types
+  export interface Validator<Type = any, Optionality = "required" | "optional", FieldType = any> {
+    readonly type: Type;
+    readonly optionality: Optionality;
+    readonly fieldType: FieldType;
+  }
+
+  export type ValidatorType<V> = V extends Validator<infer T, any, any> ? T : never;
+  export type Id<TableName extends string = string> = string & { readonly __tableName: TableName };
+
+  // Validator function interfaces
   export interface VString {
     (): Validator<string, "required", string>;
   }
   
   export interface VNumber {
     (): Validator<number, "required", number>;
+  }
+  
+  export interface VBigInt {
+    (): Validator<bigint, "required", bigint>;
   }
   
   export interface VBoolean {
@@ -30,6 +45,10 @@ declare module "convex/values" {
   
   export interface VAny {
     (): Validator<any, "required", any>;
+  }
+  
+  export interface VBytes {
+    (): Validator<ArrayBuffer, "required", ArrayBuffer>;
   }
   
   export interface VArray {
@@ -46,6 +65,13 @@ declare module "convex/values" {
     >;
   }
   
+  export interface VRecord {
+    <K extends Validator<string, any, any>, V extends Validator<any, any, any>>(
+      keyValidator: K,
+      valueValidator: V
+    ): Validator<Record<ValidatorType<K>, ValidatorType<V>>, "required", Record<ValidatorType<K>, ValidatorType<V>>>;
+  }
+  
   export interface VUnion {
     <T extends readonly Validator<any, any, any>[]>(
       ...types: T
@@ -58,30 +84,31 @@ declare module "convex/values" {
     ): Validator<T | undefined, "optional", T | undefined>;
   }
   
+  export interface VLiteral {
+    <T extends string | number | boolean | null>(
+      value: T
+    ): Validator<T, "required", T>;
+  }
+  
   export interface VId {
     <TableName extends string>(tableName: TableName): Validator<Id<TableName>, "required", Id<TableName>>;
   }
 
-  export interface Validator<Type, Optionality, FieldType> {
-    readonly type: Type;
-    readonly optionality: Optionality;
-    readonly fieldType: FieldType;
-  }
-
-  export type ValidatorType<V> = V extends Validator<infer T, any, any> ? T : never;
-
-  export type Id<TableName extends string> = string & { __tableName: TableName };
-
+  // Main v export
   export const v: {
     string: VString;
     number: VNumber;
+    bigint: VBigInt;
     boolean: VBoolean;
     null: VNull;
     any: VAny;
+    bytes: VBytes;
     array: VArray;
     object: VObject;
+    record: VRecord;
     union: VUnion;
     optional: VOptional;
+    literal: VLiteral;
     id: VId;
   };
 }
