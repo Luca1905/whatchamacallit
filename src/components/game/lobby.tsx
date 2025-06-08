@@ -3,7 +3,6 @@
 import PlayerList from "@/components/game/player-list";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Separator } from "@/components/ui/separator";
 import { useGameContext } from "@/context/game-context";
 import { api } from "@/convex/_generated/api";
@@ -19,14 +18,6 @@ export default function Lobby() {
 		api.rooms.playerIsHost,
 		roomCode ? { roomCode } : "skip",
 	);
-
-	if (!isReady) {
-		return (
-			<div className="flex min-h-screen items-center justify-center bg-blue-50">
-				<LoadingSpinner size={48} className="text-blue-600" />
-			</div>
-		);
-	}
 
 	const handleStartGame = () => {
 		startGame();
