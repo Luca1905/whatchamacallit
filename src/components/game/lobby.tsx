@@ -28,7 +28,7 @@ export default function Lobby() {
 	};
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 p-6">
+		<div className="min-h-screen p-6">
 			<div className="mx-auto max-w-4xl">
 				<div className="mb-8 flex items-center gap-4">
 					<Button

@@ -38,14 +38,14 @@ export default function SetupScreen() {
 	}
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 p-6">
+		<div className="min-h-screen p-6">
 			<div className="mx-auto max-w-md text-center">
-				<h2 className="font-bold text-4xl text-blue-600">Multiplayer Lobby</h2>
+				<h2 className="font-bold text-4xl text-primary">Multiplayer Lobby</h2>
 				<div className="mt-8 space-y-4">
 					<Button
 						onClick={createRoom}
 						size="lg"
-						className="w-full bg-green-500 hover:bg-green-600"
+						className="w-full"
 					>
 						Create Room
 					</Button>

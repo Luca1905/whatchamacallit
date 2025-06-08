@@ -25,10 +25,15 @@ export default function RootLayout({
 			<body>
 				<ClerkProvider>
 					<ConvexClientProvider>
-						<main className="scanlines">
-							<div className="screen">
-								<canvas id="canvas" className="picture -z-10 relative" />
-								<div className="overlay">{children}</div>
+						<main className="scanlines relative min-h-screen">
+							<div className="screen relative">
+								<canvas
+									id="canvas"
+									className="picture -z-10 absolute inset-0"
+								/>
+								<div className="overlay relative z-0">
+									<div className="relative z-10">{children}</div>
+								</div>
 							</div>
 						</main>
 					</ConvexClientProvider>

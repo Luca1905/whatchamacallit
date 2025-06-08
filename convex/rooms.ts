@@ -14,7 +14,7 @@ export const createRoom = mutation({
 		const player = await getPlayerByUserid(ctx, identity.tokenIdentifier);
 
 		const roomCode = Math.floor(1e5 + Math.random() * 9e4).toString();
-		const roomId = await ctx.db.insert("rooms", {
+		await ctx.db.insert("rooms", {
 			hostId: player._id,
 			playerIds: [player._id],
 			roomCode,
