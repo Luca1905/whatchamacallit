@@ -18,7 +18,7 @@ export default function LoadingState({
 	if (isReady) return null;
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50 p-6">
+		<div className="min-h-screen p-6">
 			<div className="mx-auto max-w-6xl">
 				{/* Header skeleton */}
 				<div className="mb-8 flex items-center justify-between">

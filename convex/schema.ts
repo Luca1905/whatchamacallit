@@ -50,4 +50,12 @@ export default defineSchema({
 	})
 		.index("by_room_round", ["roomId", "round"]) // Primary index for fetching round answers
 		.index("by_player_round", ["playerId", "round"]), // Secondary index for player history
+
+	playerActivities: defineTable({
+		roomCode: v.string(), // Room code identifier for grouping activities
+		playerId: v.id("players"), // Reference to the player
+		playerName: v.string(), // Cached player display name
+		isTyping: v.boolean(), // Typing status
+		lastActivity: v.number(), // Timestamp of last activity in ms
+	}).index("by_room_code", ["roomCode"]),
 });

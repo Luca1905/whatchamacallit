@@ -13,7 +13,7 @@ export default function MultiplayerDemo() {
 
 	if (!isReady || !roomCode) {
 		return (
-			<div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 p-6">
+			<div className="min-h-screen p-6">
 				<div className="mx-auto max-w-6xl">
 					<Card className="border-0 shadow-lg">
 						<CardContent className="p-12 text-center">
@@ -32,7 +32,7 @@ export default function MultiplayerDemo() {
 	}
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 p-6">
+		<div className="min-h-screen p-6">
 			<div className="mx-auto max-w-7xl">
 				{/* Header */}
 				<div className="mb-8 text-center">
@@ -204,7 +204,7 @@ export default function MultiplayerDemo() {
 
 				{/* Footer */}
 				<div className="mt-12 text-center">
-					<Card className="border-0 bg-gradient-to-r from-blue-50 to-purple-50 shadow-lg">
+					<Card className="border-0 shadow-lg">
 						<CardContent className="p-6">
 							<p className="mb-2 text-gray-600">
 								🎉 <strong>Multiplayer components ready for production!</strong>

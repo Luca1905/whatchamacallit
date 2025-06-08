@@ -1,10 +1,12 @@
 "use client";
 
+import { api } from "@/../convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { useGameContext } from "@/context/game-context";
+import { useMutation } from "convex/react";
 import { Crown, Send } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -16,16 +18,20 @@ interface AnswerState {
 }
 
 export default function EnhancedAnswerInput() {
-	const { gameState, submitAnswer } = useGameContext();
+	const { gameState, submitAnswer, roomCode } = useGameContext();
 	const [answerState, setAnswerState] = useState({
 		text: "",
 		isSubmitting: false,
 		isSubmitted: false,
 		error: null,
-	});
+	} as AnswerState);
 
 	const [timeLeft, setTimeLeft] = useState(60); // 60 second timer
 	const [charactersTyped, setCharactersTyped] = useState(0);
+
+	const updatePlayerActivity = useMutation(
+		api.playerActivity.updatePlayerActivity,
+	);
 
 	// Timer countdown
 	useEffect(() => {
@@ -60,6 +66,9 @@ export default function EnhancedAnswerInput() {
 			error: null,
 		}));
 		setCharactersTyped(value.length);
+		if (roomCode) {
+			updatePlayerActivity({ roomCode, isTyping: true });
+		}
 	};
 
 	const handleSubmit = async () => {
@@ -79,6 +88,9 @@ export default function EnhancedAnswerInput() {
 
 		try {
 			await submitAnswer(answerState.text);
+			if (roomCode) {
+				updatePlayerActivity({ roomCode, isTyping: false });
+			}
 			setAnswerState((prev: AnswerState) => ({
 				...prev,
 				isSubmitting: false,

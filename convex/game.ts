@@ -105,20 +105,17 @@ export const startGame = mutation({
 		if (!player || !room.playerIds.includes(player._id)) {
 			throw new Error("Player not in room");
 		}
-
-		// Make first player doctor if none already
-		let doctorAssigned = false;
+		// Only the host can start the game
+		if (room.hostId !== player._id) {
+			throw new Error("Only the host can start the game");
+		}
+		// Assign a random doctor for this game: reset flags and choose one
 		for (const pid of room.playerIds) {
-			const p = await ctx.db.get(pid);
-			if (p && p.isDoctor) {
-				doctorAssigned = true;
-				break;
-			}
+			await ctx.db.patch(pid, { isDoctor: false });
 		}
-		if (!doctorAssigned) {
-			const firstPlayerId = room.playerIds[0]!;
-			await ctx.db.patch(firstPlayerId, { isDoctor: true });
-		}
+		const randomIndex = Math.floor(Math.random() * room.playerIds.length);
+		const doctorId = room.playerIds[randomIndex]!;
+		await ctx.db.patch(doctorId, { isDoctor: true });
 
 		// Remove old game if exists
 		const existingGame = await ctx.db

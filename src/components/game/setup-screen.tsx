@@ -23,9 +23,9 @@ export default function SetupScreen() {
 
 	if (isAuthLoading || player === undefined) {
 		return (
-			<div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-50 p-6">
+			<div className="flex min-h-screen items-center justify-center p-6">
 				<div className="text-center">
-					<div className="mx-auto h-12 w-12 animate-spin rounded-full border-blue-600 border-b-2"></div>
+					<div className="mx-auto h-12 w-12 animate-spin rounded-full border-blue-600 border-b-2" />
 					<p className="mt-4 text-blue-600">Loading...</p>
 				</div>
 			</div>

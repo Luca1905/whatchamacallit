@@ -7,14 +7,29 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useGameContext } from "@/context/game-context";
 import type { Player } from "@/lib/game-types";
+import { api } from "convex/_generated/api";
+import { useQuery } from "convex/react";
 import { ArrowLeft, Crown, Play, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function EnhancedLobby() {
 	const router = useRouter();
 	const { gameState, startGame, roomCode, isReady } = useGameContext();
 	const [isStarting, setIsStarting] = useState(false);
+	// Determine host by fetching room info and current player
+	const room = useQuery(api.rooms.getRoom, roomCode ? { roomCode } : "skip");
+	const currentPlayer = useQuery(api.user.getPlayer);
+	const isHost = Boolean(
+		room && currentPlayer && room.hostId === currentPlayer._id,
+	);
+	// Redirect non-host players when the game phase changes from waiting
+	useEffect(() => {
+		if (!isReady) return;
+		if (!isHost && gameState.gamePhase !== "waiting") {
+			router.push("/game/play");
+		}
+	}, [isReady, isHost, gameState.gamePhase, router]);
 
 	if (!isReady) {
 		return (
@@ -42,7 +57,7 @@ export default function EnhancedLobby() {
 	const canStartGame = gameState.players.length >= minPlayersRequired;
 
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50 p-6">
+		<div className="min-h-screen p-6">
 			<div className="mx-auto max-w-4xl">
 				{/* Header */}
 				<div className="mb-8 flex items-center justify-between">
@@ -203,7 +218,7 @@ export default function EnhancedLobby() {
 											needed)
 										</p>
 									</div>
-								) : (
+								) : isHost ? (
 									<Button
 										onClick={handleStartGame}
 										disabled={isStarting}
@@ -217,6 +232,10 @@ export default function EnhancedLobby() {
 										)}
 										{isStarting ? "Starting..." : "Start Game"}
 									</Button>
+								) : (
+									<div className="text-center text-muted-foreground text-sm">
+										Waiting for host to start the game...
+									</div>
 								)}
 							</CardContent>
 						</Card>

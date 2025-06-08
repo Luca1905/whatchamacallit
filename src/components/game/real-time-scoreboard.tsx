@@ -16,7 +16,7 @@ interface ScoreChange {
 
 export default function RealTimeScoreboard() {
 	const { gameState } = useGameContext();
-	const [scoreChanges, setScoreChanges] = useState([]);
+	const [scoreChanges, setScoreChanges] = useState<ScoreChange[]>([]);
 	const [animatingPlayers, setAnimatingPlayers] = useState(new Set());
 
 	// Track score changes for animations

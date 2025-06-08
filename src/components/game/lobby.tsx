@@ -6,13 +6,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Separator } from "@/components/ui/separator";
 import { useGameContext } from "@/context/game-context";
-import { ArrowLeft, Play, Users } from "lucide-react";
+import { api } from "convex/_generated/api";
+import { useQuery } from "convex/react";
+import { ArrowLeft, CheckCircle, Loader2, Play, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React from "react";
 
 export default function Lobby() {
 	const router = useRouter();
-	const { gameState, startGame, roomCode, isReady } = useGameContext();
+	const { gameState, startGame, roomCode, isReady, setIsReady } =
+		useGameContext();
+	const isHost = useQuery(
+		api.rooms.playerIsHost,
+		roomCode ? { roomCode } : "skip",
+	);
 
 	if (!isReady) {
 		return (
@@ -76,15 +82,36 @@ export default function Lobby() {
 										: "Add at least 2 players to continue"}
 								</p>
 							</div>
-							<Button
-								onClick={handleStartGame}
-								disabled={gameState.players.length < 2}
-								size="lg"
-								className="bg-blue-500 px-8 hover:bg-blue-600"
-							>
-								<Play className="mr-2 h-5 w-5" />
-								Start Game
-							</Button>
+							{isHost ? (
+								<Button
+									onClick={handleStartGame}
+									disabled={gameState.players.length < 2}
+									size="lg"
+									className="bg-blue-500 px-8 hover:bg-blue-600"
+								>
+									<Play className="mr-2 h-5 w-5" />
+									Start Game
+								</Button>
+							) : (
+								<Button
+									size="lg"
+									className="bg-gray-500 px-8 hover:bg-gray-600"
+									onClick={() => setIsReady(true)}
+									disabled={isReady}
+								>
+									{isReady ? (
+										<>
+											<Loader2 className="mr-2 h-5 w-5 animate-spin" />
+											Ready
+										</>
+									) : (
+										<>
+											<CheckCircle className="mr-2 h-5 w-5" />
+											Ready
+										</>
+									)}
+								</Button>
+							)}
 						</div>
 					</CardContent>
 				</Card>

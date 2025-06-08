@@ -10,12 +10,10 @@ import {
 	UserProfile,
 } from "@clerk/nextjs";
 import { Gamepad2, Play, Settings, Trophy, Users } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-interface MenuScreenProps {
-	onNavigate: (screen: "menu" | "setup" | "play" | "results") => void;
-}
-
-export default function MenuScreen({ onNavigate }: MenuScreenProps) {
+export default function MenuScreen() {
+	const router = useRouter();
 	return (
 		<div className="relative z-10 flex min-h-screen flex-col items-center justify-center p-6">
 			<div className="mb-12 space-y-4 text-center">
@@ -39,9 +37,9 @@ export default function MenuScreen({ onNavigate }: MenuScreenProps) {
 					role="button"
 					tabIndex={0}
 					className="group cursor-pointer border-0 bg-gradient-to-br from-green-400 to-green-500 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-green-400"
-					onClick={() => onNavigate("setup")}
+					onClick={() => router.push("/game/setup")}
 					onKeyDown={(e: any) =>
-						(e.key === "Enter" || e.key === " ") && onNavigate("setup")
+						(e.key === "Enter" || e.key === " ") && router.push("/game/setup")
 					}
 				>
 					<CardContent className="p-8 text-center text-white">

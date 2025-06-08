@@ -2,7 +2,7 @@
 
 import { api } from "@/../convex/_generated/api";
 import { avatarColors } from "@/lib/game-data";
-import type { Answer, GameState, Player } from "@/lib/game-types";
+import type { Answer, GamePhase, GameState, Player } from "@/lib/game-types";
 import { useMutation, useQuery } from "convex/react";
 import {
 	type ReactNode,
@@ -26,9 +26,10 @@ interface GameContextType {
 	isReady: boolean;
 	createRoom: () => void;
 	joinRoom: (roomCode: string) => Promise<void>;
+	setIsReady: (isReady: boolean) => void;
 }
 
-const GameContext = createContext(undefined);
+const GameContext = createContext(undefined as GameContextType | undefined);
 
 const initialState: GameState = {
 	players: [],
@@ -43,10 +44,13 @@ const initialState: GameState = {
 };
 
 export function GameProvider({ children }: { children: ReactNode }) {
-	const [roomCode, setRoomCode] = useState(null);
-	const [selectedAnswer, setSelectedAnswer] = useState(null);
-	const backendState = useQuery(api.game.getGameState, roomCode ? { roomCode } : "skip");
-  
+	const [roomCode, setRoomCode] = useState(null as string | null);
+	const [selectedAnswer, setSelectedAnswer] = useState(null as string | null);
+	const backendState = useQuery(
+		api.game.getGameState,
+		roomCode ? { roomCode } : "skip",
+	);
+
 	const createRoom = useMutation(api.rooms.createRoom);
 	const joinRoomMutation = useMutation(api.rooms.joinRoom);
 	const startGameMutation = useMutation(api.game.startGame);
@@ -55,7 +59,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
 	const nextRoundMutation = useMutation(api.game.nextRound);
 
 	// Derived gameState for UI
-	const isReady = backendState !== undefined;
+	const [isReady, setIsReady] = useState(false);
 
 	const gameState: GameState = useMemo(() => {
 		if (!backendState) return initialState;
@@ -101,7 +105,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
 		return {
 			players,
 			roundState,
-			gamePhase: backendState.gamePhase,
+			gamePhase: backendState.gamePhase as GamePhase,
 		};
 	}, [backendState, selectedAnswer]);
 
@@ -174,6 +178,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
 				resetGame,
 				roomCode,
 				isReady,
+				setIsReady,
 				createRoom: handleCreateRoom,
 				joinRoom: handleJoinRoom,
 			}}

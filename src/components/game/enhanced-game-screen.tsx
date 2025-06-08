@@ -19,70 +19,34 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { useGameContext } from "@/context/game-context";
-import type { Answer } from "@/lib/game-types";
-import { Crown, Shuffle, Star, Trophy } from "lucide-react";
+import { Shuffle, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 export default function EnhancedGameScreen() {
 	const router = useRouter();
-	const { gameState, revealAnswers, nextRound, isReady } = useGameContext();
-	const [selectedAnswer, setSelectedAnswer] = useState(null);
-	const [isRevealing, setIsRevealing] = useState(false);
-	const [showCelebration, setShowCelebration] = useState(false);
+	const { gameState, nextRound, isReady } = useGameContext();
 
-	// Show loading state if not ready
 	if (!isReady) {
 		return (
 			<LoadingState message="Loading game..." showPlayerSkeletons={true} />
 		);
 	}
 
-	// Handle answer selection in guessing phase
-	const handleAnswerSelect = (answer: string) => {
-		setSelectedAnswer(answer);
-	};
-
-	// Handle reveal answers
-	const handleRevealAnswers = async () => {
-		if (!selectedAnswer) return;
-
-		setIsRevealing(true);
-		try {
-			await revealAnswers();
-			setShowCelebration(true);
-			setTimeout(() => setShowCelebration(false), 3000);
-		} catch (error) {
-			console.error("Failed to reveal answers:", error);
-		} finally {
-			setIsRevealing(false);
-		}
-	};
-
 	// Handle next round
 	const handleNextRound = async () => {
-		setSelectedAnswer(null);
 		await nextRound();
 		if (gameState.roundState.currentRound >= gameState.roundState.totalRounds) {
 			router.push("/game/results");
 		}
 	};
 
-	// Check if player guessed correctly
-	const isCorrectGuess = () => {
-		const doctorAnswer = gameState.roundState.answers.find(
-			(a: Answer) => a.isDoctor,
-		);
-		return selectedAnswer === doctorAnswer?.answer;
-	};
-
 	return (
-		<div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50 p-6">
-			<div className="mx-auto max-w-6xl">
+		<div className="min-h-screen p-6">
+			<div className="mx-auto max-w-8xl">
 				{/* Enhanced layout with sidebar */}
-				<div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
+				<div className="grid grid-cols-1 gap-6 lg:grid-cols-6">
 					{/* Main game area */}
-					<div className="space-y-6 lg:col-span-3">
+					<div className="space-y-6 lg:col-span-4">
 						{/* Header with enhanced progress */}
 						<div className="flex items-center justify-between">
 							<div className="space-y-3">
@@ -136,7 +100,7 @@ export default function EnhancedGameScreen() {
 					</div>
 
 					{/* Sidebar with real-time info */}
-					<div className="max-h-screen space-y-4 overflow-y-auto lg:col-span-1">
+					<div className="max-h-screen space-y-4 overflow-y-auto lg:col-span-2">
 						<RealTimeScoreboard />
 						<PlayerDashboard />
 						<LiveGameFeed />

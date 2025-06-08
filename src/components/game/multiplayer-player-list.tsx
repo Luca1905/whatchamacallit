@@ -16,7 +16,9 @@ interface PlayerActivityStatus {
 
 export default function MultiplayerPlayerList() {
 	const { gameState, roomCode, isReady } = useGameContext();
-	const [playerActivity, setPlayerActivity] = useState({});
+	const [playerActivity, setPlayerActivity] = useState(
+		{} as Record<string, PlayerActivityStatus>,
+	);
 
 	// Simulate player activity tracking (in real app, this would come from Convex)
 	useEffect(() => {

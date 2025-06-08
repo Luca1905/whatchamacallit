@@ -15,7 +15,9 @@ interface PhaseTransition {
 
 export default function GamePhaseTransition() {
 	const { gameState } = useGameContext();
-	const [currentTransition, setCurrentTransition] = useState(null);
+	const [currentTransition, setCurrentTransition] = useState(
+		null as PhaseTransition | null,
+	);
 	const [isVisible, setIsVisible] = useState(false);
 
 	// Track phase changes

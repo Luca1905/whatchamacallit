@@ -10,8 +10,10 @@ import { useState } from "react";
 
 export default function AnswerVisualization() {
 	const { gameState, selectAnswer, revealAnswers } = useGameContext();
-	const [selectedAnswerId, setSelectedAnswerId] = useState(null);
-	const [hoveredAnswerId, setHoveredAnswerId] = useState(null);
+	const [selectedAnswerId, setSelectedAnswerId] = useState(
+		null as string | null,
+	);
+	const [hoveredAnswerId, setHoveredAnswerId] = useState(null as string | null);
 
 	// Don't show during non-relevant phases
 	if (
@@ -124,146 +126,60 @@ export default function AnswerVisualization() {
 					</div>
 				)}
 
+				{/* Reveal instructions */}
 				{isRevealingPhase && (
-					<div
-						className={`rounded-lg border p-3 ${
-							correctGuess
-								? "border-green-200 bg-green-50"
-								: "border-orange-200 bg-orange-50"
-						}`}
-					>
-						<p
-							className={`font-medium text-sm ${
-								correctGuess ? "text-green-700" : "text-orange-700"
-							}`}
-						>
-							{correctGuess
-								? "🎉 Excellent detective work! You found Dr. Whatchamacallit's answer!"
-								: "😅 Better luck next round! Dr. Whatchamacallit fooled you this time."}
+					<div className="rounded-lg border border-green-200 bg-green-50 p-3">
+						<p className="font-medium text-green-700 text-sm">
+							🏆 Results are in! Here's how everyone did.
 						</p>
 					</div>
 				)}
 
-				{/* Answers Grid */}
-				<div className="grid gap-3">
-					{answers.map((answer: Answer, index: number) => {
-						const player = gameState.players.find(
-							(p: Player) => p.id === answer.playerId,
-						);
-
-						return (
-							<div
-								key={answer.id}
-								className={getAnswerStyle(answer)}
-								onClick={() => handleAnswerSelect(answer)}
-								onMouseEnter={() => setHoveredAnswerId(answer.id)}
-								onMouseLeave={() => setHoveredAnswerId(null)}
-							>
-								<div className="flex items-center justify-between">
-									{/* Answer content */}
-									<div className="flex flex-1 items-center gap-3">
-										<Badge
-											variant={
-												isRevealingPhase && answer.isDoctor
-													? "default"
-													: selectedAnswerId === answer.id
-														? "default"
-														: "secondary"
-											}
-											className={`${
-												isRevealingPhase && answer.isDoctor
-													? "bg-yellow-500 text-white"
-													: ""
-											}`}
-										>
-											{String.fromCharCode(65 + index)}
-										</Badge>
-
-										<span className="flex-1 font-medium text-gray-900">
-											"{answer.answer}"
-										</span>
-									</div>
-
-									{/* Answer metadata */}
-									<div className="flex items-center gap-2">
-										{/* Selection indicator */}
-										{isGuessingPhase && selectedAnswerId === answer.id && (
-											<div className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500">
-												<div className="h-2 w-2 rounded-full bg-white" />
-											</div>
-										)}
-
-										{/* Doctor reveal */}
-										{isRevealingPhase && answer.isDoctor && (
-											<div className="flex items-center gap-1">
-												<Crown className="h-4 w-4 text-yellow-600" />
-												<span className="font-medium text-sm text-yellow-700">
-													Dr. Whatchamacallit
-												</span>
-											</div>
-										)}
-
-										{/* Player reveal */}
-										{isRevealingPhase && !answer.isDoctor && (
-											<div className="flex items-center gap-2">
-												{selectedAnswerId === answer.id && (
-													<Badge variant="outline" className="text-xs">
-														Your Guess
-													</Badge>
-												)}
-												<span className="text-gray-600 text-sm">
-													{player?.name || "Unknown Player"}
-												</span>
-											</div>
-										)}
-
-										{/* Player avatar for revealing phase */}
-										{isRevealingPhase && player && (
-											<div
-												className={`flex h-6 w-6 items-center justify-center rounded-full font-bold text-white text-xs ${player.avatar}`}
-											>
-												{player.name.charAt(0).toUpperCase()}
-											</div>
-										)}
-									</div>
-								</div>
+				{/* Answer cards */}
+				<div className="grid gap-4">
+					{answers.map((answer: Answer, index: number) => (
+						<div
+							key={answer.id}
+							className={getAnswerStyle(answer)}
+							onClick={() => handleAnswerSelect(answer)}
+							onMouseEnter={() => setHoveredAnswerId(answer.id)}
+							onMouseLeave={() => setHoveredAnswerId(null)}
+						>
+							<div className="flex items-center justify-between">
+								<Badge variant={answer.isDoctor ? "default" : "secondary"}>
+									{String.fromCharCode(65 + index)}
+								</Badge>
+								<span className="font-medium">{answer.answer}</span>
 							</div>
-						);
-					})}
+							{isRevealingPhase && (
+								<div className="mt-2 flex items-center justify-between text-muted-foreground text-sm">
+									{answer.isDoctor ? (
+										<div className="flex items-center gap-2">
+											<Crown className="h-4 w-4 text-yellow-500" />
+											Dr. Whatchamacallit
+										</div>
+									) : (
+										<span>{answer.playerName}</span>
+									)}
+								</div>
+							)}
+						</div>
+					))}
 				</div>
 
-				{/* Action buttons */}
+				{/* Reveal button */}
 				{isGuessingPhase && (
-					<div className="flex justify-center border-t pt-4">
+					<div className="flex justify-center pt-4">
 						<Button
 							onClick={handleRevealAnswers}
 							disabled={!selectedAnswerId}
 							size="lg"
-							className="bg-purple-500 px-8 hover:bg-purple-600 disabled:opacity-50"
+							className="bg-accent text-accent-foreground hover:bg-accent/90"
 						>
-							<Trophy className="mr-2 h-5 w-5" />
-							Reveal the Truth!
+							Reveal Answers
 						</Button>
 					</div>
 				)}
-
-				{/* Statistics */}
-				<div className="border-t pt-4">
-					<div className="grid grid-cols-2 gap-4 text-center">
-						<div>
-							<div className="font-bold text-gray-900 text-lg">
-								{answers.length}
-							</div>
-							<div className="text-gray-500 text-xs">Total Answers</div>
-						</div>
-						<div>
-							<div className="font-bold text-gray-900 text-lg">
-								{gameState.roundState.currentRound}
-							</div>
-							<div className="text-gray-500 text-xs">Current Round</div>
-						</div>
-					</div>
-				</div>
 			</CardContent>
 		</Card>
 	);

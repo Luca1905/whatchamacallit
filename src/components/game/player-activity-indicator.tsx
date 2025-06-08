@@ -1,40 +1,18 @@
 "use client";
 
+import { api } from "@/../convex/_generated/api";
 import { Badge } from "@/components/ui/badge";
 import { useGameContext } from "@/context/game-context";
-import type { Player } from "@/lib/game-types";
+import { useQuery } from "convex/react";
 import { Users } from "lucide-react";
-import { useEffect, useState } from "react";
-
-interface PlayerActivity {
-	playerId: string;
-	playerName: string;
-	isTyping: boolean;
-	lastActivity: Date;
-}
 
 export default function PlayerActivityIndicator() {
 	const { gameState, roomCode } = useGameContext();
-	const [activities, setActivities] = useState([]);
-
-	// Simulate activity tracking (in real app, this would come from Convex)
-	useEffect(() => {
-		if (gameState.gamePhase === "answering") {
-			// Simulate some players typing
-			const activeActivities = gameState.players
-				.filter((player: Player) => Math.random() > 0.7) // Randomly show some as typing
-				.map((player: Player) => ({
-					playerId: player.id,
-					playerName: player.name,
-					isTyping: true,
-					lastActivity: new Date(),
-				}));
-
-			setActivities(activeActivities);
-		} else {
-			setActivities([]);
-		}
-	}, [gameState.gamePhase, gameState.players]);
+	const activities =
+		useQuery(
+			api.playerActivity.getPlayerActivities,
+			gameState.gamePhase === "answering" && roomCode ? { roomCode } : "skip",
+		) ?? [];
 
 	if (!roomCode || activities.length === 0) return null;
 
@@ -49,19 +27,21 @@ export default function PlayerActivityIndicator() {
 				</div>
 
 				<div className="space-y-1">
-					{activities.map((activity: PlayerActivity) => (
-						<div key={activity.playerId} className="flex items-center gap-2">
-							<div className="flex items-center gap-1">
-								<div className="h-2 w-2 animate-pulse rounded-full bg-green-500" />
-								<span className="text-gray-600 text-xs">
-									{activity.playerName}
-								</span>
+					{activities.map((activity) => {
+						return (
+							<div key={activity.playerId} className="flex items-center gap-2">
+								<div className="flex items-center gap-1">
+									<div className="h-2 w-2 animate-pulse rounded-full bg-green-500" />
+									<span className="text-gray-600 text-xs">
+										{activity.playerName}
+									</span>
+								</div>
+								<Badge variant="secondary" className="text-xs">
+									typing...
+								</Badge>
 							</div>
-							<Badge variant="secondary" className="text-xs">
-								typing...
-							</Badge>
-						</div>
-					))}
+						);
+					})}
 				</div>
 			</div>
 		</div>

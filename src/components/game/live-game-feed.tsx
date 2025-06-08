@@ -23,7 +23,7 @@ interface GameEvent {
 
 export default function LiveGameFeed() {
 	const { gameState, roomCode } = useGameContext();
-	const [events, setEvents] = useState([]);
+	const [events, setEvents] = useState([] as GameEvent[]);
 	const [isExpanded, setIsExpanded] = useState(false);
 
 	// Generate events based on game state changes
