@@ -40,7 +40,7 @@ export default function UsernameSetup() {
 	}
 
 	return (
-		<div className="relative z-10 min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 p-6">
+		<div className="relative z-10 min-h-screen p-6">
 			<div className="mx-auto max-w-md text-center">
 				<h2 className="mb-8 font-bold text-4xl text-blue-600">
 					Choose Your Username
