@@ -28,7 +28,11 @@
 		/* Path Aliases */
 		"baseUrl": ".",
 		"paths": {
-			"@/*": ["./src/*"]
+			"@/*": ["./src/*"],
+			"convex/*": ["./convex/*"],
+			"convex/server": ["./node_modules/convex/server"],
+			"convex/values": ["./node_modules/convex/values"],
+			"convex/react": ["./node_modules/convex/react"]
 		}
 	},
 	"include": [
