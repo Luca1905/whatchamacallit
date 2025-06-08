@@ -1,6 +1,6 @@
 "use client";
 
-import { api } from "@/../convex/_generated/api";
+import { api } from "@/convex/_generated/api";
 import { avatarColors } from "@/lib/game-data";
 import type { Answer, GamePhase, GameState, Player } from "@/lib/game-types";
 import { useMutation, useQuery } from "convex/react";

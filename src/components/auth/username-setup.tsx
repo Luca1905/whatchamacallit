@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { api } from "convex/_generated/api";
+import { api } from "@/convex/_generated/api";
 import { useMutation, useQuery } from "convex/react";
 import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

@@ -2,12 +2,11 @@
 
 import ConnectionStatus from "@/components/game/connection-status";
 import LoadingState from "@/components/game/loading-state";
-import PlayerList from "@/components/game/player-list";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useGameContext } from "@/context/game-context";
+import { api } from "@/convex/_generated/api";
 import type { Player } from "@/lib/game-types";
-import { api } from "convex/_generated/api";
 import { useQuery } from "convex/react";
 import { ArrowLeft, Crown, Play, Users } from "lucide-react";
 import { useRouter } from "next/navigation";

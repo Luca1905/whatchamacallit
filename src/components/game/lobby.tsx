@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Separator } from "@/components/ui/separator";
 import { useGameContext } from "@/context/game-context";
-import { api } from "convex/_generated/api";
+import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
 import { ArrowLeft, CheckCircle, Loader2, Play, Users } from "lucide-react";
 import { useRouter } from "next/navigation";

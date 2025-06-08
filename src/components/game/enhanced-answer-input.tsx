@@ -1,11 +1,11 @@
 "use client";
 
-import { api } from "@/../convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { useGameContext } from "@/context/game-context";
+import { api } from "@/convex/_generated/api";
 import { useMutation } from "convex/react";
 import { Crown, Send } from "lucide-react";
 import { useEffect, useState } from "react";

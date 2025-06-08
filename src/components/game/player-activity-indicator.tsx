@@ -1,8 +1,8 @@
 "use client";
 
-import { api } from "@/../convex/_generated/api";
 import { Badge } from "@/components/ui/badge";
 import { useGameContext } from "@/context/game-context";
+import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
 import { Users } from "lucide-react";
 

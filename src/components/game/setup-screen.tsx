@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useGameContext } from "@/context/game-context";
-import { api } from "convex/_generated/api";
+import { api } from "@/convex/_generated/api";
 import { useConvexAuth, useQuery } from "convex/react";
 import { redirect, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
