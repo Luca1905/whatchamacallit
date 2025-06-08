@@ -40,7 +40,7 @@ export default function MenuScreen({ onNavigate }: MenuScreenProps) {
 					tabIndex={0}
 					className="group cursor-pointer border-0 bg-gradient-to-br from-green-400 to-green-500 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-green-400"
 					onClick={() => onNavigate("setup")}
-					onKeyDown={(e) =>
+					onKeyDown={(e: any) =>
 						(e.key === "Enter" || e.key === " ") && onNavigate("setup")
 					}
 				>

@@ -11,7 +11,7 @@ export default function PlayerList() {
 
 	return (
 		<div className="max-h-64 space-y-3 overflow-y-auto">
-			{gameState.players.map((player, index) => (
+			{gameState.players.map((player: any, index: number) => (
 				<div
 					key={player.id}
 					className="flex items-center justify-between rounded-lg bg-muted/50 p-3"

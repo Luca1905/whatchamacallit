@@ -1,21 +1,18 @@
 "use client";
 
 import { api } from "@/../convex/_generated/api";
-import {
-	addPlayer,
-	nextRound,
-	startGame,
-	submitAnswer,
-} from "@/lib/game-service";
-import type { GameState } from "@/lib/game-types";
-import { useMutation } from "convex/react";
+import { avatarColors } from "@/lib/game-data";
+import type { Answer, GameState, Player } from "@/lib/game-types";
+import { useMutation, useQuery } from "convex/react";
 import {
 	type ReactNode,
 	createContext,
 	useContext,
-	useEffect,
+	useMemo,
 	useState,
 } from "react";
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 interface GameContextType {
 	gameState: GameState;
@@ -28,11 +25,12 @@ interface GameContextType {
 	nextRound: () => void;
 	resetGame: () => void;
 	roomCode: string | null;
+	isReady: boolean;
 	createRoom: () => void;
 	joinRoom: (roomCode: string) => Promise<void>;
 }
 
-const GameContext = createContext<GameContextType | undefined>(undefined);
+const GameContext = createContext(undefined);
 
 const initialState: GameState = {
 	players: [],
@@ -47,86 +45,126 @@ const initialState: GameState = {
 };
 
 export function GameProvider({ children }: { children: ReactNode }) {
-	const [gameState, setGameState] = useState<GameState>(initialState);
-	const [roomCode, setRoomCode] = useState<string | null>(null);
+	const [roomCode, setRoomCode] = useState(null);
+	const [selectedAnswer, setSelectedAnswer] = useState(null);
+
+	// Cast to any to accommodate possible lag in Convex codegen during development
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const apiAny: any = api;
+
+	const backendState = useQuery(
+		roomCode ? apiAny.game.getGameState : undefined,
+		roomCode ? { roomCode } : undefined,
+	);
+
 	const createRoom = useMutation(api.rooms.createRoom);
-	const joinRoomRoom = useMutation(api.rooms.joinRoom);
+	const joinRoomMutation = useMutation(api.rooms.joinRoom);
+	const startGameMutation = useMutation(apiAny.game.startGame);
+	const submitAnswerMutation = useMutation(apiAny.game.submitAnswer);
+	const selectAnswerMutation = useMutation(apiAny.game.selectAnswer);
+	const nextRoundMutation = useMutation(apiAny.game.nextRound);
 
-	const handleAddPlayer = (name: string) => {
-		const result = addPlayer(gameState, name);
-		if (result.success) {
-			setGameState((prev) => ({
-				...prev,
-				players: [...prev.players, result.data],
-			}));
+	// Derived gameState for UI
+	const isReady = backendState !== undefined;
+
+	const gameState: GameState = useMemo(() => {
+		if (!backendState) return initialState;
+
+		const players: Player[] = backendState.players.map(
+			(p: any, idx: number) => ({
+				id: p._id,
+				name: p.username,
+				score: p.score,
+				isDoctor: p.isDoctor,
+				avatar: p.avatar || avatarColors[idx % avatarColors.length],
+			}),
+		);
+
+		let roundState = {
+			currentRound: 0,
+			totalRounds: 0,
+			currentPrompt: "",
+			answers: [] as Answer[],
+			selectedAnswer: selectedAnswer,
+		};
+		if (backendState.roundState) {
+			const answers: Answer[] = backendState.roundState.answers.map(
+				(a: any) => ({
+					id: a._id,
+					playerId: a.playerId,
+					playerName:
+						players.find((pl) => pl.id === a.playerId)?.name || "Player",
+					answer: a.answer,
+					isDoctor: a.isDoctor,
+				}),
+			);
+
+			roundState = {
+				currentRound: backendState.roundState.currentRound,
+				totalRounds: backendState.roundState.totalRounds,
+				currentPrompt: backendState.roundState.currentPrompt,
+				answers,
+				selectedAnswer: selectedAnswer,
+			};
 		}
+
+		return {
+			players,
+			roundState,
+			gamePhase: backendState.gamePhase,
+		};
+	}, [backendState, selectedAnswer]);
+
+	// Functions
+	const addPlayer = (_name: string) => {
+		// Managed by backend via joinRoom; no-op on client.
 	};
 
-	const removePlayer = (playerId: string) => {
-		setGameState((prev) => ({
-			...prev,
-			players: prev.players.filter((p) => p.id !== playerId),
-		}));
+	const removePlayer = (_playerId: string) => {
+		// Not implemented yet.
 	};
 
-	const handleStartGame = () => {
-		const result = startGame(gameState);
-		if (result.success) {
-			setGameState(result.data);
-		}
+	const startGame = async () => {
+		if (!roomCode) return;
+		await startGameMutation({ roomCode, totalRounds: 5 });
 	};
 
-	const handleSubmitAnswer = (playerAnswer: string) => {
-		const result = submitAnswer(gameState, playerAnswer);
-		if (result.success) {
-			setGameState(result.data);
-		}
+	const submitAnswer = async (answer: string) => {
+		if (!roomCode) return;
+		await submitAnswerMutation({ roomCode, answer });
 	};
 
 	const selectAnswer = (answer: string) => {
-		setGameState((prev) => ({
-			...prev,
-			roundState: {
-				...prev.roundState,
-				selectedAnswer: answer,
-			},
-		}));
+		setSelectedAnswer(answer);
 	};
 
-	const revealAnswers = () => {
-		setGameState((prev) => ({
-			...prev,
-			gamePhase: "revealing",
-		}));
+	const revealAnswers = async () => {
+		if (!roomCode || !selectedAnswer) return;
+		await selectAnswerMutation({ roomCode, selectedAnswer });
 	};
 
-	const handleNextRound = () => {
-		const result = nextRound(gameState);
-		if (result.success) {
-			setGameState(result.data);
-		}
+	const nextRound = async () => {
+		if (!roomCode) return;
+		await nextRoundMutation({ roomCode });
 	};
 
 	const resetGame = () => {
-		setGameState({
-			...initialState,
-			players: gameState.players,
-		});
+		setSelectedAnswer(null);
 	};
 
 	const handleCreateRoom = async () => {
 		try {
-			const newRoomId = await createRoom();
-			setRoomCode(String(newRoomId));
+			const code = await createRoom();
+			setRoomCode(String(code));
 		} catch (e) {
 			console.error(e);
 		}
 	};
 
-	const handleJoinRoom = async (roomCode: string) => {
+	const handleJoinRoom = async (code: string) => {
 		try {
-			await joinRoomRoom({ roomCode });
-			setRoomCode(roomCode);
+			await joinRoomMutation({ roomCode: code });
+			setRoomCode(code);
 		} catch (e) {
 			console.error(e);
 		}
@@ -136,15 +174,16 @@ export function GameProvider({ children }: { children: ReactNode }) {
 		<GameContext.Provider
 			value={{
 				gameState,
-				addPlayer: handleAddPlayer,
+				addPlayer,
 				removePlayer,
-				startGame: handleStartGame,
-				submitAnswer: handleSubmitAnswer,
+				startGame,
+				submitAnswer,
 				selectAnswer,
 				revealAnswers,
-				nextRound: handleNextRound,
+				nextRound,
 				resetGame,
 				roomCode,
+				isReady,
 				createRoom: handleCreateRoom,
 				joinRoom: handleJoinRoom,
 			}}

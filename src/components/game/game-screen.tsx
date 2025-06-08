@@ -75,9 +75,9 @@ export default function GameScreen() {
 								<Input
 									placeholder="Replace 'whatchamacallit' with your creative answer..."
 									value={playerAnswer}
-									onChange={(e) => setPlayerAnswer(e.target.value)}
+									onChange={(e: any) => setPlayerAnswer(e.target.value)}
 									className="p-4 text-lg"
-									onKeyDown={(e) => e.key === "Enter" && handleSubmitAnswer()}
+									onKeyDown={(e: any) => e.key === "Enter" && handleSubmitAnswer()}
 								/>
 								<Button
 									onClick={handleSubmitAnswer}
@@ -133,7 +133,7 @@ export default function GameScreen() {
 						</CardHeader>
 						<CardContent className="space-y-6">
 							<div className="grid gap-4">
-								{gameState.roundState.answers.map((answer, index) => (
+								{gameState.roundState.answers.map((answer: any, index: number) => (
 									<div
 										key={answer.id}
 										className={`rounded-lg border-2 p-4 ${
@@ -173,7 +173,7 @@ export default function GameScreen() {
 							<div className="text-center">
 								<p className="mb-4 text-lg">
 									{gameState.roundState.selectedAnswer ===
-									gameState.roundState.answers.find((a) => a.isDoctor)?.answer
+									gameState.roundState.answers.find((a: any) => a.isDoctor)?.answer
 										? "🎉 Correct! You found Dr. Whatchamacallit's answer!"
 										: "❌ Wrong guess! Better luck next round!"}
 								</p>
