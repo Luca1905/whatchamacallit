@@ -11,6 +11,7 @@ import {
 	useMemo,
 	useState,
 } from "react";
+import { toast } from "sonner";
 
 interface GameContextType {
 	gameState: GameState;
@@ -157,8 +158,14 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
 	const handleJoinRoom = async (code: string) => {
 		try {
-			await joinRoomMutation({ roomCode: code });
-			setRoomCode(code);
+			const success = await joinRoomMutation({ roomCode: code });
+			if (success) {
+				setRoomCode(code);
+			} else {
+				toast.error("Invalid room code", {
+					description: "Please try again.",
+				});
+			}
 		} catch (e) {
 			console.error(e);
 		}

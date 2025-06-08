@@ -42,7 +42,7 @@ export const joinRoom = mutation({
 			.withIndex("by_room_code", (q) => q.eq("roomCode", roomCode))
 			.first();
 		if (!room) {
-			throw new Error("Room not found");
+			return false;
 		}
 		const player = await getPlayerByUserid(ctx, identity.tokenIdentifier);
 

@@ -5,6 +5,7 @@ import { Geist } from "next/font/google";
 
 import ConvexClientProvider from "@/components/ConvexClientProvider";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
 	title: "Create T3 App",
@@ -33,6 +34,7 @@ export default function RootLayout({
 								/>
 								<div className="overlay relative z-0">
 									<div className="relative z-10">{children}</div>
+									<Toaster />
 								</div>
 							</div>
 						</main>
