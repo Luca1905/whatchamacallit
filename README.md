@@ -1,29 +1,73 @@
-# Create T3 App
+# 🚀 Quick Start Guide - Dr. Whatchamacallit Multiplayer Game
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+## 🛠️ Setup Instructions
 
-## What's next? How do I make an app with this?
+### 1. Install Dependencies
+```bash
+bun install
+```
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+### 2. Set Up Convex
+```bash
+# Initialize Convex (if not already done)
+bunx convex dev
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+# This will:
+# - Create your Convex project
+# - Generate your CONVEX_URL
+# - Start the development server
+```
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+### 3. Configure Environment Variables
+Create `.env.local`:
+```bash
+# Convex
+NEXT_PUBLIC_CONVEX_URL=https://your-convex-url.convex.cloud
 
-## Learn More
+# Clerk Authentication (optional - can use Convex auth instead)
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_key
+CLERK_SECRET_KEY=your_clerk_secret
+```
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+### 4. Start Development Server
+```bash
+bun dev
+```
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+## 🎮 Game Features Ready to Play
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+### Core Multiplayer Mechanics
+- ✅ **Room Creation & Joining**: Unique room codes for multiplayer sessions
+- ✅ **Real-time Synchronization**: All players see live updates instantly
+- ✅ **Phase-based Gameplay**: Answering → Guessing → Revealing → Next Round
+- ✅ **Scoring System**: Points awarded for correct guesses and clever answers
+- ✅ **Doctor Role**: Special player whose answers others try to identify
 
-## How do I deploy this?
+### Game Flow
+1. **Menu** → **Setup** → **Lobby** → **Game Play** → **Results**
+2. **Real-time Player Management**: See players join/leave instantly
+3. **Answer Submission**: Creative responses to funny prompts
+4. **Guessing Phase**: Identify which answer belongs to "Dr. Whatchamacallit"
+5. **Score Tracking**: Live leaderboard with round-by-round scoring
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+## 🎯 How to Play
+
+### For Host:
+1. Navigate to `/game`
+2. Click "Create Room" 
+3. Share the room code with other players
+4. Wait for players to join in the lobby
+5. Click "Start Game" when ready (minimum 2 players)
+
+### For Players:
+1. Navigate to `/game`
+2. Click "Join Room"
+3. Enter the room code
+4. Wait in lobby until host starts the game
+
+### Gameplay:
+1. **Answer Phase**: All players submit creative answers to the prompt
+2. **Guess Phase**: Players vote on which answer belongs to Dr. Whatchamacallit
+3. **Reveal Phase**: See the correct answer and score updates
+4. **Next Round**: Continues for 5 rounds (configurable)
+5. **Results**: Final leaderboard and play again option
